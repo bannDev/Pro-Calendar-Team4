@@ -1,0 +1,306 @@
+/* 12 column responsive layout */
+* {
+    box-sizing: border-box;
+}
+
+.col-1 {width: 8.33%;}
+.col-2 {width: 16.66%;}
+.col-3 {width: 25%;}
+.col-4 {width: 33.33%;}
+.col-5 {width: 41.66%;}
+.col-6 {width: 50%;}
+.col-7 {width: 58.33%;}
+.col-8 {width: 66.66%;}
+.col-9 {width: 75%;}
+.col-10 {width: 83.33%;}
+.col-11 {width: 91.66%;}
+.col-12 {width: 100%;}
+
+[class*="col-"] {
+    float: left;
+    padding: 15px;
+}
+
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.row {
+}
+
+/* grid layout module */
+.grid-container-1 {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.grid-container-2 {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+}
+
+[class*="grid-col-"] {
+    border-left: 1px solid black;
+    border-top: 1px solid black;
+    padding: 5px;
+}
+
+.grid-col-1 {
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
+.grid-col-2 {
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+.grid-col-3 {
+    grid-column-start: 3;
+    grid-column-end: 4;
+}
+
+.grid-col-4 {
+    grid-column-start: 4;
+    grid-column-end: 5;
+}
+
+.grid-col-5 {
+    grid-column-start: 5;
+    grid-column-end: 6;
+}
+
+.grid-col-6 {
+    grid-column-start: 6;
+    grid-column-end: 7;
+}
+
+.grid-col-7 {
+    grid-column-start: 7;
+    grid-column-end: 8;
+}
+
+.grid-col-8 {
+    grid-column-start: 8;
+    grid-column-end: 9;
+}
+
+[class*="day-col-"] {
+    border-left: 1px solid black;
+    border-top: 1px solid black;
+    padding: 5px;
+}
+
+.day-col-1 {
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
+.day-col-2 {
+    grid-column-start: 2;
+    grid-column-end: 7;
+}
+
+.day-col-3 {
+    grid-column-start: 7;
+    grid-column-end: 9;
+    /* need to remove lines from bottom */
+}
+
+[class*="year-col-"] {
+    border-left: 1px solid black;
+    border-top: 1px solid black;
+    padding: 5px;
+}
+
+.year-col-1 {
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+.year-col-2 {
+    grid-column-start: 3;
+    grid-column-end: 5;
+}
+
+.year-col-3 {
+    grid-column-start: 5;
+    grid-column-end: 7;
+}
+
+.year-col-4 {
+    grid-column-start: 7;
+    grid-column-end: 9;
+    border-right: 1px solid black;
+}
+
+.btm-row {
+    border-bottom: 1px solid black;
+}
+
+.last-col {
+    border-right: 1px solid black;
+}
+
+/* collapsible sidepanel menu */
+.sidepanel {
+    height: 100%;
+    width: 0; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: 0;
+    left: 0;
+    background-color: #111; /* Black*/
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 60px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidepanel */
+}
+
+/* sidepanel links */
+.sidepanel a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidepanel a:hover {
+    color: #f1f1f1;
+}
+
+/* close button */
+.sidepanel .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+/* toggle sidepanel button */
+.openbtn {
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #111;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+}
+
+.openbtn:hover {
+    background-color: #444;
+}
+
+/* collapsible menu sections */
+/* collapse trigger button */
+.collapsible {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .collapsible:hover {
+    background-color: #ccc;
+}
+
+/* collapsible content. Note: hidden by default */
+.content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
+
+/* main */
+.main {}
+
+.calendar-header {}
+
+.month {}
+
+.nav {
+    text-align: right;
+}
+
+.views {
+    text-align: right;
+}
+
+.calendar {}
+
+.day {}
+
+.date {
+    text-align: right;
+}
+
+.event-area {
+    height: 50px;
+}
+
+fieldset {
+    background: lightgray;
+    height: 250px;
+    width: 250px;
+}
+
+form {
+    display: inline-block;
+}
+
+.details {
+    background: lightgray;
+    height: 250px;
+    width: 250px;
+    padding: 5px 15px 15px 15px;
+}
+
+/* modals */
+/* background */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* modal content */
+.modal-content, .add-event-modal {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Could be more or less, depending on screen size */
+}
+
+/* modal close button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}

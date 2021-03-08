@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+    <style>
+        .form-popup {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 30;
+}
+
+/* Add styles to the form container */
+.form-container {
+  max-width: 800px;
+  padding: 10px;
+  background-color: white;
+}
+
+    </style>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <body>
+        <h4>Hi {{user[0]['fname']}}<button onclick="location.href='/logout'">Edit account </button><button onclick="location.href='/logout'"> Logout</button> </h4>
+
+        <table style="width: 100% ; height:10%;text-align: center;">
+            <tr>
+                <td>
+                    <button onclick= "theBigDay.setMonth(theBigDay.getMonth()-1);showMoCal(theBigDay)"> back</button> 
+                </td>
+                <td>
+                    <h4 id='calHeader'></h4>
+                </td>
+                <td> 
+         <button onclick= "theBigDay.setMonth(theBigDay.getMonth()+1);showMoCal(theBigDay) ">forward</button> 
+            </tr>    
+        </table >
+        <table id ='mainT' style='border: 2px solid black; width: 100% ;border-collapse: collapse ', id='t1'>
+            <thead id='am' style='border: 2px solid black;'>
+
+            </thead>
+         
+        </table >
+        <div class="form-popup" id="myForm">
+            <div class='form-container'>
+                
+                    <fieldset> <legend ><h3 id='theday'></h3></legend>
+                        <p hidden id='noentry'>There is'nt any events</p> 
+                        <table >
+                
+                            <thead id='entryhead' >
+                            <td><h4>Event name</h4></td>
+                            <td><h4>Adress</h4></td>
+                            <td><h4>start time</h4></td>
+                            <td><h4>End time</h4></td>
+                            <td><h4>Color</h4></td>
+                            <td><h4></h4></td>
+                    
+                        </thead>
+                        <tr id='addrow'>             
+                            <td><h3 ><input type="text"   id='ename' hidden></input> </h3></td>
+                            <td><h3 ><input type="text"   id='address' hidden></input> </h3></td>
+                            <td><h3 ><input type="time"   id='start'hidden></input> </h3></td>
+                            <td><h3 ><input type="time"   id='end' hidden></input> </h3></td>
+                            <td><h3 ><input type="color"   id='color' hidden></input> </h3></td>
+                            <td><h3>
+                            <button   type="submit" id="addevent" style="color:green" >ADD Event</button>     
+                   
+                        </h3></td></tr>
+                        </table><br><br>
+        
+                    </fieldset>
+
+            </div>
+
+
+        </div>
+        <script>
+            var events=[]
+            {%for event in events %}
+             events.push({{event|tojson}}) 
+            {% endfor %}
+             
+                      
+            
+            var theBigDay = new Date();
+           
+            const week = ['SUN',  'MON','TUE','WED','THU','FRI','SAT'];
+            for (var i=0 ; i<7; i++){ 
+                $("#am").append("<td style='height:40px; text-align: center; width:14%;' >"+ week[i]+"</td>")
+            }    
+            
+            for (var i=0 ; i<5; i++){
+                var stri="row"+i.toString();
+                elem="<tr ID="+stri+"></tr>"
+                $('#mainT').append(elem)
+                for (var j=0 ; j<7; j++){
+                    var e= document.createElement('td')
+                    e.setAttribute('id','cel-'+(7*i+j).toString())
+                    e.setAttribute('style','height:80px ;vertical-align: top;padding: 15px;border: 1px solid black;')
+                    $('#'+stri).append(e)
+                }
+            }
+            showMoCal(theBigDay)
+            
+            function showMoCal(x){
+                
+                mstr=x.toString().split(" ")[1]+" "+x.toString().split(" ")[3]
+                document.getElementById('calHeader').innerHTML=mstr;
+                var m = new Date(x)
+                m.setDate(1)
+                a=1-m.getDay()
+                m.setDate(a)
+                for (var i=0;i<35;i++){
+                    $("#cel-"+i.toString()).attr('name',d2s(m))
+                    $("#cel-"+i.toString()).css('background-color', '#f7f7f7')
+                    $("#cel-"+i.toString()).html(m.getDate())
+                    m.setDate(m.getDate()+1)
+                                   
+                }  
+                first= sdt2date($('#cel-0').attr('name'),'00:00');
+                last= sdt2date($('#cel-34').attr('name'),'23:59');
+                
+                for (i in events){
+                    event=events[i]
+                    //alert(event.color)
+                    eventt=sdt2date(event.date,event.start)
+                    if (eventt>first & eventt<last){
+                        //var e="<h6 style:'color:"+event.color+";'> "+event.eventname+"</p>"
+                        select='[name='+event.date+']'
+                        //$(select).append(e)
+                        var temp= $(select).html()
+                        temp +="<br><span style='font-size:0.75em; color:"+event.color+";'>" + event.eventname +"</span>"
+                        $(select).html(temp)
+                    }
+                }
+              
+                
+                todayname= '[name ='+d2s(new Date())+']'   
+                $(todayname).css('background-color', '#777777')
+
+            }   
+            $(document).ready(function(){
+            $("[id|='cel']").on({
+                mouseenter: function(){
+                a=$(this).css('background-color')
+                $(this).css('background-color', '#aaaaaa'); 
+                },
+                mouseleave:function(){
+                $(this).css('background-color', a);
+                },
+                click: function(){
+                    if ($('#myForm').css('display')=='none'){
+                    $('#myForm').css('display','block');
+                    popup($(this).attr('name'))   
+                
+                    }
+                    else{ $('#myForm').css('display','none');
+                    popdown()
+                    }
+              
+                }        
+     
+        
+            })})
+         
+            function dt2s(x){                //convert to yyyy-mm-ddThh:mm   2021-02-26T20:52
+               return new Date(x.getTime() - (x.getTimezoneOffset() * 60000 )).toISOString().slice(0,16)
+            }
+            function d2s(x){                    //convert to yyyy-mm-dd
+                return dt2s(x).split('T')[0]
+            }
+            function t2s(x){                    //convert to  hh:mm  23:48
+                return dt2s(x).split('T')[1]
+            }
+            function sd2date(x){           //
+                return(new Date(x+"T12:00"))
+            }
+            function sdt2date(d,t){            //convert d=yyyy-mm-dd and t=hh:mm to msecende
+                return(Date.parse(d+'T'+t+":00.000Z"))
+            }
+
+
+            function popup(x){
+               
+                $('#theday').html(sd2date(x).toString().slice(0,15))
+                first= sdt2date(x,'00:00');
+                last= sdt2date(x,'23:59');
+                $('#noentry').show()
+                $('#entryhead').hide()
+                for (i in events){
+                     event=events[i]
+                     eventt=sdt2date(event.date,event.start)
+                    if (eventt>first & eventt<last){
+                        $('#noentry').hide()
+                        $('#entryhead').show()
+                        var e = document.createElement('tr')
+                        e.setAttribute('id','poprow-'+event.eventID)
+                        
+                        var s=''
+                            s+="<td><h3 ><input type='text' value='"+event.eventname+" 'disabled id='1a"+event.eventID+"'></input> </h3></td>"
+                            s+="<td><h3 ><input type='text' value='"+event.address+" 'disabled id='2a"+event.eventID+"'></input> </h3></td>"
+                            s+="<td><h3 ><input type='time' value="+event.start+" disabled id='4a"+event.eventID+"'></input> </h3></td>"
+                            s+="<td><h3 ><input type='time' value="+event.end+" disabled id='5a"+event.eventID+"'></input> </h3></td>"
+                            s+="<td><h3 ><input type='color' value="+event.color+" disabled id='6a"+event.eventID+"'></input> </h3></td>"
+                            s+="<td><h3><button name='del' id='d"+event.eventID+"'style='color:red' >del</button>"
+                            s+="<button name='edit' id='e"+event.eventID+"'style='color:blue' >edit</button></h3></td>"   
+                        $('#addrow').before(e);
+                        //var eid='#row'+event.eventID.toString()
+                        //alert(eid)
+                        $('#poprow-'+event.eventID.toString()).html(s)
+                                             
+                    }
+                }
+
+                $(document).ready(function(){
+                    $('div button').click(function(){
+                    var a =$(this).prop('id');
+                            
+                        if ($(this).html()=='ADD Event'){
+                            $('thead').show();
+                            $('div button').hide();
+                            $(this).show();
+                            $(this).html('done');
+                            $('#addrow input').show();
+                            var change =true;
+                        }
+                        if (a=='addevent' && $(this).html()=='done' && !change ){
+                            
+                            a1=$("#ename").val();
+                            a2=$("#address").val();
+                            a3= x
+                            a4=$("#start").val();
+                            a5=$("#end").val();
+                            a6=$("#color").val();
+                            if( a1.length>2 & a2.length>2 &isNaN(a4.valueOf())& 
+                                    isNaN(a5.valueOf())& isNaN(a5.valueOf())){ //check validation
+                        // write more js code to make sure it does not overlap with other events
+                                change=false;
+                                $('#addevent').hide()
+                                var send={st:'add',name:a1,address:a2,date:a3,start:a4,end:a5,color:a6}
+                                
+                                send_data(send)
+                            }
+                            else{alert("some field didn't assign")}
+                            }   
+                //delete
+                        if (a.indexOf('d')== 0){
+                            var send={st:'del',ido:a.slice(1,)}
+                            send_data(send)
+                    
+                        }
+
+           
+
+                //edit
+                        if  ($(this).html() == 'edit' ){
+                            $('div button').hide();
+                            $(this).show();
+                            $(this).html('done') 
+                            var temp='[id$=a'+a.slice(1,)+']'
+                            $(temp).removeAttr('disabled');                  
+                            var change =true;
+                        }
+
+                        if (a.indexOf('e')==0 && $(this).html()=='done' && !change ){                    
+                            change = false;
+                            $(this).html('edit')
+                            $('div button').show();
+                            a0=a.slice(1,);
+                            a1=$("#1a"+a0).val();
+                            a2=$("#2a"+a0).val();
+                            a3=x
+                            a4=$("#4a"+a0).val();
+                            a5=$("#5a"+a0).val();
+                            a6=$("#6a"+a0).val();
+                            var temp='[id$=a'+ a0 +']'
+                            $(temp).attr('disabled','disabled'); 
+                            var send={st:'edit',ido:a0,name:a1,address:a2,date:a3,start:a4,end:a5,color:a6}
+                            send_data(send)
+                            
+                        }    
+
+            })})        
+
+           
+
+            }
+            function send_data(data){
+                myJSON = JSON.stringify(data);
+                $.post( "/edit_event", {id: myJSON},function(data,status){
+                    events=data.events
+                    
+                    showMoCal(theBigDay)
+                    $('#addevent').show()
+                    popdown()
+                    popup(d2s(new Date($('#theday').html())))
+                
+                    
+                
+            })}
+            
+  
+            function popdown(x){
+                $('div button').off('click')
+                $("[id|=poprow]").remove();
+                $('entryhead').hide();
+                $('#addrow input').hide();            
+                $('#addevent').show();
+                $('#addevent').html('ADD Event');
+                change=false;
+
+            }    
+
+            
+            
+        </script>
+        
+    </body>
+</html>

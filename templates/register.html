@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+ 
+    <body>
+        <form name='myForm'  onsubmit="return checkAll()" action="{{url_for('adduser')}}"  method="POST">
+            <label for="uname"><b>Username</b></label><br>
+            <input id='uname' type="varchar" placeholder="Enter Username" name="uname" minlegth='5' required ">
+            <span hidden id='existUser' style='font-size: 11px; color:red'>was taken </span><br><br>
+            
+            <label for="inputEmail"><b>Email</b></label><br>
+            <input type="email" placeholder="Enter Email" name="iemail" required>
+            <span hidden id='existEmail' style='font-size: 11px; color:red'>this email has taken</span><br><br>
+            
+            <label for="psw"><b>Password</b></label><br>
+            <input type="password" placeholder="Enter Password" name="psw" minlength="8" required><br><br>
+           
+            <label for="repsw"><b>RePassword</b></label><br>
+            <input type="password" placeholder="RE Enter Password" name="repsw" minlength="8" required>
+            <span hidden id='notsame' style='font-size: 11px; color:red'>are not same</span><br><br>
+            
+            <label for="inputFirstName"><b>First Name</b></label><br>
+            <input type="varchar" placeholder="Enter First Name" name="fname" required><br><br>
+
+            <label for="inputLastName"><b>Last Name</b></label><br>
+            <input type="varchar" placeholder="Enter Last Name" name="lname" required><br><br>
+
+            
+
+            <input type="submit" name='submit'  value="Register"/></br>
+            {{msg}}
+        </form>
+        <h4><a href="/login">Do you have an account</a></h4>
+       
+    </body>
+    <script>
+        var valid1 ,valid2 ,valid3
+        var email=''
+        var user=''
+        $(document).ready(function(){
+        $('[name=uname]').blur(function(){checkUserName(this)})
+        ,
+        $('[name=repsw]').blur(function(){checkEqu(this)})
+        ,   
+        $('[name=iemail]').blur(function(){checkInEmail(this)})
+        
+        
+        })
+
+        function checkUserName(e){ 
+           user=e.value 
+           json_user=JSON.stringify({flag:'uname','uname':user}) 
+           $.post('/usercheck',{'checkReq':json_user},function(data){
+            valid1 = data.pass
+           if (!data.pass){$('#existUser').show("slow")}
+           else{$('#existUser').hide("slow") }
+
+            })
+        }
+
+        function checkInEmail(e){ 
+           email=e.value 
+           json_user=JSON.stringify({flag:'iemail',iemail:email}) 
+           $.post('/usercheck',{checkReq:json_user},function(data){
+            valid2=data.pass
+            if (!data.pass){$('#existEmail').show("slow") }
+            else{$('#existEmail').hide("slow") }
+
+            })
+        }
+        function checkEqu(e){
+           var m= document.getElementsByName('psw')[0].value
+           valid3=(e.value==m)
+           if(e.value != m){$('#notsame').show("slow") }
+           else{$('#notsame').hide("slow")} 
+        }
+        function checkAll(){
+            if (!(valid1 & valid2 & valid3)) {return false;}
+            var c=0
+            st=false
+            json_user=JSON.stringify({flag:'validemail',email:email,username:user}) 
+            var ajaxo={url:'/usercheck', type:'POST',success:function(){return},async:false }
+            ajaxo.data={checkReq:json_user};
+            ajaxo.success=function(r){c=prompt('Enter 6 digit activation code to complete your registration')};
+            $.ajax(ajaxo)
+            json_user=JSON.stringify({'flag':'rndcode','code':c})
+            ajaxo.data={checkReq:json_user};
+            ajaxo.success=function(r){st=r.pass}
+            $.ajax(ajaxo)
+            alert(st)
+            return st
+        }   
+                 
+       
+       
+       
+           
+    </script>
+</html>

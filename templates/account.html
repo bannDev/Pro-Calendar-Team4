@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<html>
+    <body>
+        <h3>Hi {{user[0]['fname']}}</h3> <h5><a href="/logout">Edit account </a><br><a href="/logout"> Logout</a></h5> 
+        <p hidden>There is'nt any events</p> 
+        <fieldset> <legend ><h2>Events:</h2></legend>
+            <table >
+                
+                <thead >
+                    <td><h4>Event name</h4></td>
+                    <td><h4>Adress</h4></td>
+                    <td><h4>Date</h4></td> 
+                    <td><h4>start time</h4></td>
+                    <td><h4>End time</h4></td>
+                    <td><h4>Color</h4></td>
+                    <td><h4></h4></td>
+                    
+                </thead>
+                {% for event in events %}
+                <tr  id='t{{event["eventID"]}}'>
+                
+                    <td><h3 ><input type="text"  value='{{event['eventname']}}' disabled id='1a{{event["eventID"]}}'></input> </h3></td>
+                    <td><h3 ><input type="text"  value='{{event['address']}}' disabled id='2a{{event["eventID"]}}'></input> </h3></td>
+                    <td><h3 ><input type="date"  value='{{event['date']}}' disabled id='3a{{event["eventID"]}}'></input> </h3></td>
+                    <td><h3 ><input type="time"  value='{{event['start']}}' disabled id='4a{{event["eventID"]}}'></input> </h3></td>
+                    <td><h3 ><input type="time"  value='{{event['end']}}' disabled id='5a{{event["eventID"]}}'></input> </h3></td>
+                    <td><h3 ><input type="color"  value='{{event['color']}}' disabled id='6a{{event["eventID"]}}'></input> </h3></td>
+                                       
+                    <td><h3>
+                        <button name='del' id='d{{event["eventID"]}}' style="color:red" >del </button>     
+                        <button name==edit id='e{{event["eventID"]}}' style="color:blue">edit</button> 
+                    </h3></td>
+                </tr >  
+                    {% endfor %}
+                    
+                <tr>             
+                    <td><h3 ><input type="text"   id='ename' hidden></input> </h3></td>
+                    <td><h3 ><input type="text"   id='address' hidden></input> </h3></td>
+                    <td><h3 ><input type="date"   id='date' hidden></input> </h3></td>
+                    <td><h3 ><input type="time"   id='start'hidden></input> </h3></td>
+                    <td><h3 ><input type="time"   id='end' hidden></input> </h3></td>
+                    <td><h3 ><input type="color"   id='color' hidden></input> </h3></td>
+                <td><h3>
+                    <button   type="submit" id="addevent" style="color:green" >ADD Event</button>     
+                   
+                </h3></td></tr>
+            </table><br><br>
+           
+                 
+        </fieldset>
+         
+    </body>
+    <script>
+        var events=[]
+        {%for event in events %}
+          events.push({{event|tojson}}) 
+        {% endfor %}
+          
+        alert(events[0].eventname)
+
+
+        
+        {%if events|length<1 %}
+            $('thead').hide()
+            $('p').show()
+            
+        {% endif%}
+
+
+        
+        function reloa(){window.location.reload();}
+        
+        $(document).ready(function(){
+            $('button').click(function(){
+                var a =$(this).prop('id');
+                
+                if ($(this).html()=='ADD Event'){
+                    $('thead').show();
+                    $('button').hide();
+                    $(this).show();
+                    $(this).html('done')
+                    $('#ename').show();
+                    $('#address').show();
+                    $('#date').show();
+                    $('#start').show();
+                    $('#end').show();
+                    $('#color').show();
+                    var change =true;
+                }
+                if (a=='addevent' && $(this).html()=='done' && !change ){
+                   
+                    a1=$("#ename").val();
+                    a2=$("#address").val();
+                    a3=$("#date").val();
+                    a4=$("#start").val();
+                    a5=$("#end").val();
+                    a6=$("#color").val();
+                    
+                    if( a1.length>2 & a2.length>2 &isNaN(a3.valueOf())&isNaN(a4.valueOf())& 
+                    isNaN(a5.valueOf())& isNaN(a5.valueOf())){ //check validation
+                        // write more js code to make sure it does not overlap with other events
+                        change=false;
+                        var send={st:'add',name:a1,address:a2,date:a3,start:a4,end:a5,color:a6}
+                        //alert(send.st);
+                        myJSON = JSON.stringify(send);
+                        $.post( "/edit_event", {id: myJSON});
+                        setTimeout(reloa, 2000);
+                    }
+                    else{alert("some field didn't assign")}
+                    
+                }   
+                //delete
+                if (a.indexOf('d')== 0){
+                    var send={st:'del',ido:a.slice(1,)}
+                    //alert(send.ido);
+                    myJSON = JSON.stringify(send);
+                    $.post( "/edit_event", {id: myJSON});
+                    setTimeout(reloa, 2000);
+                    
+                }
+
+
+                
+
+                //edit
+                if  ($(this).html() == 'edit' ){
+                    $('button').hide();
+                    $(this).show();
+                    $(this).html('done')                   
+                    $("#1a"+a.slice(1,)).removeAttr('disabled');
+                    $("#2a"+a.slice(1,)).removeAttr('disabled');
+                    $("#3a"+a.slice(1,)).removeAttr('disabled');
+                    $("#4a"+a.slice(1,)).removeAttr('disabled');
+                    $("#5a"+a.slice(1,)).removeAttr('disabled');
+                    $("#6a"+a.slice(1,)).removeAttr('disabled');
+                    var change =true;
+                }
+                
+                
+                if (a.indexOf('e')==0 && $(this).html()=='done' && !change ){                    
+                    change = false;
+                    $(this).html('edit')
+                    $('button').show();
+                    a0=a.slice(1,);
+                    a1=$("#1a"+a.slice(1,)).val();
+                    a2=$("#2a"+a.slice(1,)).val();
+                    a3=$("#3a"+a.slice(1,)).val();
+                    a4=$("#4a"+a.slice(1,)).val();
+                    a5=$("#5a"+a.slice(1,)).val();
+                    a6=$("#6a"+a.slice(1,)).val();
+                    var send={st:'edit',ido:a0,name:a1,address:a2,date:a3,start:a4,end:a5,color:a6}
+                    //alert(send.ido);
+                    myJSON = JSON.stringify(send);
+                    $.post( "/edit_event", {id: myJSON});
+
+                    
+                    $("#1a"+a.slice(1,)).attr('disabled','disabled');
+                    $("#2a"+a.slice(1,)).attr('disabled','disabled');
+                    $("#3a"+a.slice(1,)).attr('disabled','disabled');
+                    $("#4a"+a.slice(1,)).attr('disabled','disabled');
+                    $("#5a"+a.slice(1,)).attr('disabled','disabled');
+                    $("#6a"+a.slice(1,)).attr('disabled','disabled');
+
+                    setTimeout(reloa, 2000);
+                }    
+
+                
+                
+            })})
+        
+    
+    </script>
+</html>
