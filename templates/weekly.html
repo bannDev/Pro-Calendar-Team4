@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pro Calendar</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+    
+<body class="row body">
+    <!-- menu -->
+    <div class="col-3 menu">
+        <div class="row menu-header">
+            <h1>Pro Calendar</h1>
+            <button>Close menu</button>
+        </div>
+        <!-- add event collapsible section -->
+        <button type="button" class="collapsible">Add Event</button>
+        <div class="add-event content">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title">
+            <label for="date">Date:</label>
+            <input type="text" id="date" name="date">
+            <label for="time">Time:</label>
+            <input type="text" id="time" name="time">
+            <label for="group">Group:</label>
+            <input type="text" id="group" name="group">
+            <label for="descr">Description:</label>
+            <textarea id="descr" name="descr" rows="5" cols="25"></textarea>
+            <input type="submit" value="Submit">
+        </div>
+        <!-- groups collapsible section -->
+        <button type="button" class="collapsible">Groups</button>
+        <div class="groups content">
+            <div>
+                <input type="checkbox" id="group1" name="group1">
+                <label for="group1">Group 1</label>
+            </div>
+            <div>
+                <input type="checkbox" id="group2" name="group2">
+                <label for="group2">Group 2</label>
+            </div>
+            <div>
+                <input type="checkbox" id="group3" name="group3">
+                <label for="group3">Group 3</label>
+            </div>
+            <button>New Group</button>
+        </div>
+        <!-- settings collapsible section -->
+        <button type="button" class="collapsible">Settings</button>
+        <div class="settings content">
+            <!-- themes pop-up-->
+            <div>
+                <input type="radio" id="theme1" name="theme">
+                <label for="theme1">Theme 1</label>
+                <input type="radio" id="theme2" name="theme2">
+                <label for="theme2">Theme 2</label>
+                <input type="radio" id="theme3" name="theme3">
+                <label for="theme3">Theme 3</label>
+            </div>
+            <!-- start of week pop-up-->
+            <div>
+                <p>Start of week</p>
+                <input type="radio" id="sun-start" name="sun-start">
+                <label for="sunday-start">Sunday</label>
+                <input type="radio" id="mon-start" name="mon-start">
+                <label for="mon-start">Monday</label>
+            </div>
+            <!-- week numbers pop-up-->
+            <div>
+                <p>Show week numbers</p>
+                <input type="radio" id="num-wk-yes" name="num-wk-yes">
+                <label for="num-wk-yes">Yes</label>
+                <input type="radio" id="num-wk-no" name="num-wk-no">
+                <label for="num-wk-no">No</label>
+            </div>
+            <!-- time format pop-up-->
+            <div>
+                <p>Time format</p>
+                <input type="radio" id="12-hr" name="12-hr">
+                <label for="12-hr">12 hour</label>
+                <input type="radio" id="24-hr" name="24-hr">
+                <label for="24-hr">24 hour</label>
+            </div>
+        </div>
+    </div> <!-- /menu -->
+    
+    <!-- main -->
+    <div class="col-9 main">
+        <!-- calendar header -->
+        <div class="row calendar-header">
+            <div class="col-5 month">
+                <h1>January 2021</h1>
+            </div>
+            <div class="col-3 nav">
+                <button>Back</button>
+                <button>Forward</button>
+            </div>
+            <div class="col-4 views">
+                <a href="daily.html">Day</a>
+                <a href="weekly.html">Week</a>
+                <a href="index.html">Month</a>
+                <a href="yearly.html">Year</a>
+            </div>
+        </div>
+        <!-- weekly layout, 8 columns, 13 rows -->
+        <div class="row calendar grid-container-2">
+            <!-- row1 -->
+            <div class="day grid-col-1">Time</div>
+            <div class="day grid-col-2">Sunday</div>
+            <div class="day grid-col-3">Monday</div>
+            <div class="day grid-col-4">Tuesday</div>
+            <div class="day grid-col-5">Wednesday</div>
+            <div class="day grid-col-6">Thursday</div>
+            <div class="day grid-col-7">Friday</div>
+            <div class="day grid-col-8 last-col">Saturday</div>
+            <!-- /row1 -->
+            <!--row2 -->
+            <div class="grid-col-1">06:00</div>
+            <div class="grid-col-2"></div>
+            <div class="grid-col-3"></div>
+            <div class="grid-col-4"></div>
+            <div class="grid-col-5"></div>
+            <div class="grid-col-6"></div>
+            <div class="grid-col-7"></div>
+            <div class="grid-col-8 last-col"></div>
+            <!-- /row2 -->
+            <!--row3 -->
+            <div class="grid-col-1">07:00</div>
+            <div class="grid-col-2"></div>
+            <div class="grid-col-3"></div>
+            <div class="grid-col-4"></div>
+            <div class="grid-col-5"></div>
+            <div class="grid-col-6"></div>
+            <div class="grid-col-7"></div>
+            <div class="grid-col-8 last-col"></div>
+            <!-- /row3 -->
+            <!--row4 -->
+            <div class="grid-col-1">08:00</div>
+            <div class="grid-col-2"></div>
+            <div class="grid-col-3"></div>
+            <div class="grid-col-4"></div>
+            <div class="grid-col-5"></div>
+            <div class="grid-col-6"></div>
+            <div class="grid-col-7"></div>
+            <div class="grid-col-8 last-col"></div>
+            <!-- /row4 -->
+            <!--row5 -->
+            <div class="grid-col-1">09:00</div>
+            <div class="grid-col-2"></div>
+            <div class="grid-col-3"></div>
+            <div class="grid-col-4"></div>
+            <div class="grid-col-5"></div>
+            <div class="grid-col-6"></div>
+            <div class="grid-col-7"></div>
+            <div class="grid-col-8 last-col"></div>
+            <!-- /row5 -->
+            <!--row6 -->
+            <div class="grid-col-1">10:00</div>
+            <div class="grid-col-2"></div>
+            <div class="grid-col-3"></div>
+            <div class="grid-col-4"></div>
+            <div class="grid-col-5"></div>
+            <div class="grid-col-6"></div>
+            <div class="grid-col-7"></div>
+            <div class="grid-col-8 last-col"></div>
+            <!-- /row6 -->
+            <!--row7 -->
+            <div class="grid-col-1">11:00</div>
+            <div class="grid-col-2"></div>
+            <div class="grid-col-3"></div>
+            <div class="grid-col-4"></div>
+            <div class="grid-col-5"></div>
+            <div class="grid-col-6"></div>
+            <div class="grid-col-7"></div>
+            <div class="grid-col-8 last-col"></div>
+            <!-- /row7 -->
+            <!--row8 -->
+            <div class="grid-col-1">12:00</div>
+            <div class="grid-col-2"></div>
+            <div class="grid-col-3"></div>
+            <div class="grid-col-4"></div>
+            <div class="grid-col-5"></div>
+            <div class="grid-col-6"></div>
+            <div class="grid-col-7"></div>
+            <div class="grid-col-8 last-col"></div>
+            <!-- /row8 -->
+            <!--row9 -->
+            <div class="grid-col-1">13:00</div>
+            <div class="grid-col-2"></div>
+            <div class="grid-col-3"></div>
+            <div class="grid-col-4"></div>
+            <div class="grid-col-5"></div>
+            <div class="grid-col-6"></div>
+            <div class="grid-col-7"></div>
+            <div class="grid-col-8 last-col"></div>
+            <!-- /row9 -->
+            <!--row10 -->
+            <div class="grid-col-1">14:00</div>
+            <div class="grid-col-2"></div>
+            <div class="grid-col-3"></div>
+            <div class="grid-col-4"></div>
+            <div class="grid-col-5"></div>
+            <div class="grid-col-6"></div>
+            <div class="grid-col-7"></div>
+            <div class="grid-col-8 last-col"></div>
+            <!-- /row10 -->
+            <!--row11 -->
+            <div class="grid-col-1">15:00</div>
+            <div class="grid-col-2"></div>
+            <div class="grid-col-3"></div>
+            <div class="grid-col-4"></div>
+            <div class="grid-col-5"></div>
+            <div class="grid-col-6"></div>
+            <div class="grid-col-7"></div>
+            <div class="grid-col-8 last-col"></div>
+            <!-- /row11 -->
+            <!--row12 -->
+            <div class="grid-col-1">16:00</div>
+            <div class="grid-col-2"></div>
+            <div class="grid-col-3"></div>
+            <div class="grid-col-4"></div>
+            <div class="grid-col-5"></div>
+            <div class="grid-col-6"></div>
+            <div class="grid-col-7"></div>
+            <div class="grid-col-8 last-col"></div>
+            <!-- /row12 -->
+            <!--row13 -->
+            <div class="grid-col-1 btm-row">17:00</div>
+            <div class="grid-col-2 btm-row"></div>
+            <div class="grid-col-3 btm-row"></div>
+            <div class="grid-col-4 btm-row"></div>
+            <div class="grid-col-5 btm-row"></div>
+            <div class="grid-col-6 btm-row"></div>
+            <div class="grid-col-7 btm-row"></div>
+            <div class="grid-col-8 btm-row last-col"></div>
+            <!-- /row13 -->            
+        </div>
+    </div><!-- main -->
+</body>
+</html>
