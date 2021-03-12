@@ -27,8 +27,10 @@
             <input type="time" id="start" name="start" ><br>
             <label for="end">End Time:</label>
             <input type="time" id="end" name="end" ><br>
-            <label for="group">Group color:</label>
-            <input type="color" id="color" name="color" value='#77aadd' ><br>
+            <label for="group">Group:</label>
+            <select id="group_list" onchange="changroup()">
+                <option id=grList-0></option>
+            </select><br>
             <label for="descr">Description:</label>
             <textarea id="descr" name="descr" rows="5" cols="25"></textarea><br>
             <input type="button" onclick="checkEvent()" value="Submit" id="addEventBtn">
@@ -36,20 +38,26 @@
        
         <!-- groups collapsible section -->
         <button type="button" class="collapsible">Groups</button>
-        <div class="groups content">
-            <div>
-                <input type="checkbox" id="group1" name="group1">
-                <label for="group1">Group 1</label>
+        <div class="groups content" id=groupm>
+            <div id = 'group-0'>
+                <input name=showG type="checkbox" onchange='changeshow(this)' >
+                <input  name=nameG type="text" size= 18 disabled='true' value=""></input>
+                <input  name= colorG type=color  disabled='true'></input>
+                <button  name=delGroup onclick='delGroup(this)''>Del</button>
+                <button  name=edGroup onclick='editGroup(this)'>Edit</button>                
             </div>
-            <div>
-                <input type="checkbox" id="group2" name="group2">
-                <label for="group2">Group 2</label>
+            <div id='addGr'>
+                
+                <input id="addG-Name"size=10 type="text" hidden value=""></input>
+                <input id="addG-Color"size=1 type='color'hidden ></input>
+                <button  id='addGroup' onclick='addGroup()'>New Group</button>
+                <button id='addG-Cancel' hidden onclick='adcGrCancel()'>*</button>
+                <span style="color:red;font:6px" hidden id='noGroup'>fill name box</span>
+               
+                
             </div>
-            <div>
-                <input type="checkbox" id="group3" name="group3">
-                <label for="group3">Group 3</label>
-            </div>
-            <button>New Group</button>
+            
+           
         </div>
         <!-- settings collapsible section -->
         <button type="button" class="collapsible">Settings</button>
@@ -68,7 +76,7 @@
                 <p>Start of week</p>
                 <input type="radio" id="Sat-start" name="first_day" Value=5>
                 <label for="Sat-start">Saturday</label>
-                <input type="radio" id="sun-start" name="first_day" Value=6>
+                <input type="radio" id="sun-start" name="first_day" Value=6 checked>
                 <label for="sunday-start">Sunday</label>
                 <input type="radio" id="mon-start" name="first_day" Value=0>
                 <label for="mon-start">Monday</label>
@@ -122,7 +130,8 @@
             <div class="day grid-col-6">Friday</div>
             <div class="day grid-col-7 last-col">Saturday</div>
             <!-- /row1 -->
-            <!-- row2 -->
+           
+            
             <div class="grid-col-1">
                 <div class="date"></div>
                 <div class="event-area"></div>
@@ -181,121 +190,7 @@
                 <div class="date">9</div>
                 <div class="event-area"></div>
             </div>
-            <!-- /row3 -->
-            <!-- row4 -->
-            <div class="grid-col-1">
-                <div class="date">10</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-2">
-                <div class="date">11</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-3">
-                <div class="date">12</div>
-                <div class="event-area">
-                    
-                </div>
-            </div>
-            <div class="grid-col-4">
-                <div class="date">13</div>
-                <div class="event-area">
-                    <!-- Trigger/Open The Modal
-                    <button id="myBtn">Open Modal</button>
-                    <!-- The Modal
-                    <div id="myModal" class="modal">
-                        <!-- Modal content
-                        <div class="modal-content">
-                            <span class="close">&times;</span>
-                            <p>Some text in the Modal..</p>
-                        </div> <!-- /modal-content
-                    </div> <!-- /modal -->
-                </div> <!-- /event-area -->
-            </div> <!-- /grid-col-4 -->
-            <div class="grid-col-5">
-                <div class="date">14</div>
-                <div class="event-area">
-                    <!-- Trigger/Open The Modal
-                    <button id="myBtn">Open Modal</button>
-                    <!-- The Modal
-                    <div id="myModal" class="modal">
-                        <!-- Modal content 
-                        <div class="modal-content">
-                            <span class="close">&times;</span>
-                            <p>Some text in the Modal..</p>
-                        </div> <!-- /modal-content
-                    </div> <!-- /modal -->
-                </div> <!-- /event-area -->
-            </div> <!-- /grid-col-5 -->
-            <div class="grid-col-6">
-                <div class="date">15</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-7 last-col">
-                <div class="date">16</div>
-                <div class="event-area"></div>
-            </div>
-            <!-- /row4 -->
-            <!-- row5 -->
-            <div class="grid-col-1">
-                <div class="date">17</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-2">
-                <div class="date">18</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-3">
-                <div class="date">19</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-4">
-                <div class="date">20</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-5">
-                <div class="date">21</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-6">
-                <div class="date">22</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-7 last-col">
-                <div class="date">23</div>
-                <div class="event-area"></div>
-            </div>
-            <!-- /row5 -->
-            <!-- row6 -->
-            <div class="grid-col-1">
-                <div class="date">24</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-2">
-                <div class="date">25</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-3">
-                <div class="date">26</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-4">
-                <div class="date">27</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-5">
-                <div class="date">28</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-6">
-                <div class="date">29</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-7 last-col">
-                <div class="date">30</div>
-                <div class="event-area"></div>
-            </div>
-            <!-- /row6 -->
+            
             <!-- row7 -->
             <div class="grid-col-1 btm-row">
                 <div class="date">31</div>
@@ -334,8 +229,7 @@
 
 </body>
 
-<script src="{{url_for('static', filename = 'script.js')}}"></script>-->
-
+<script src="{{url_for('static', filename = 'script.js')}}"></script>
 
 
 
