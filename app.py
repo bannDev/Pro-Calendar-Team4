@@ -24,6 +24,8 @@ mail = Mail(app)
 
 
 
+
+
 def send_email(email_address,message_body,subjects):
     msg = Message(subjects, sender = 'procalendar.mehrdad@gmail.com', recipients = [email_address])
     msg.body = message_body
@@ -59,11 +61,15 @@ def adduser():
             iemail=request.form['iemail']
             lname=request.form['lname']
             fname=request.form['fname']
-            print(uname +","+ psw +","+ fname +","+lname+","+iemail)
+            ViewSet=''
+            print(ViewSet)
+            print(uname +","+ psw +","+ fname +","+lname+","+iemail+","+ ViewSet)
             with sql.connect("mdn1.db") as con:
                 cur=con.cursor()
-                cur.execute('INSERT INTO users(username,password,email,lname,fname)\
-                             VALUES (?,?,?,?,?)', (uname,psw,iemail,lname,fname))
+                cur.execute('INSERT INTO users(username,password,email,lname,fname,ViewSet)\
+                             VALUES (?,?,?,?,?,?)', (uname,psw,iemail,lname,fname,ViewSet))
+                con.commit()
+                cur.execute('INSERT INTO groups(name,username,color,show) VALUES (?,?,?,?) ',(uname,uname,'#8080ff',True))            
                 con.commit()
                 msg=''
         except:
@@ -129,15 +135,20 @@ def dashboard():
     con.row_factory =dict_factory
     cur=con.cursor()
     cur.execute("select * from users where username = ?",(session['username'],))
-    user = cur.fetchall()
+    global user 
+    global groups
+    user=cur.fetchall()
+    cur.execute("select * from groups where username = ?",(session['username'],))
+    groups=cur.fetchall()
     con.close()
-    return render_template('index.html',user = user)
+    return render_template('index.html')
 
 
 ## month calendar MVC 
 @app.route('/month_calendar',methods = ['POST','GET'])
 @is_logged_in
 def month_calendar():
+   
 #   if method != 'POST" return redirect 
     data_rec=json.loads(request.form['data'])   
     month = data_rec['month']
@@ -163,8 +174,6 @@ def month_calendar():
       week_header.append(week_name[i])  
 #make day_header {0:{name:28,cur:c}}  p/c/n are the posible value for cur
 # maybe we want to show them in another style
-# the day headr must be a list of 42 objects (not 35 or 28 because T'anna design 42 div )
-    #current_month=d.month
     next_month=((month)%12)+1
     pre_month=((month-2)%12)+1 
     day_header=[]
@@ -177,25 +186,8 @@ def month_calendar():
         else:
             k['cur']='p'  
         k['name']= month_name[i[1]]+" 1" if i[2]==1 else i[2]
-        
         k['id'] = date(i[0],i[1],i[2]).strftime('%Y-%m-%d')
         day_header.append(k)
-   
-    rej=7 if day_header[-1]['cur']=='n'else 0
-    j=42-len(day_header)+rej
-    y=year+1 if month==12 else year
-    for i in c.itermonthdays3(y,next_month):
-        j-=1
-        rej -=1
-        if rej>=0 :
-            continue
-        k={}
-        k['cur']='n'  
-        k['name']= month_name[i[1]]+" 1" if i[2]==1 else i[2]
-        k['id'] = date(i[0],i[1],i[2]).strftime('%Y-%m-%d')
-        day_header.append(k)
-        if j==0 :
-            break
    
     # make day_event this is a list which it contains 42 list of event bjects 
     con=sql.connect("mdn1.db")
@@ -205,16 +197,13 @@ def month_calendar():
     day_event=[]
     for i in day_header:
         day_id = i['id'] 
-        cur.execute("select eventname ,color, start,eventID  from event where username = ?\
+        cur.execute("select eventname ,groupID, start,eventID  from event where username = ?\
         and date = ? order by start",(uname,day_id))
         day_event.append(cur.fetchall())
-    con.close()    
-    data={'month_header':month_header,'week_header':week_header,'day_header':day_header,'day_event':day_event}
+    con.close()  
+    data={'month_header':month_header,'week_header':week_header,'user':user,\
+    'day_header':day_header,'day_event':day_event,'groups':groups}
     return {'data':data}
-
-
-    
-
 
 
 ##logout
@@ -268,7 +257,6 @@ def checkuser():
     if checkReq['flag'] == 'rndcode':
         code= int(checkReq['code'])
         allPass = datetime.now() < requestTime and code == rndNum
-        print (allPass)
         return{'pass': allPass }
     
 ## for del and edit and add events
@@ -281,23 +269,23 @@ def edit_event():
     cur=con.cursor()
     print(jsd)
 
-    if(jsd['st'] =='edit' or jsd['st'] =='add'):
+    if(jsd['st'] =='editEv' or jsd['st'] =='addEv'):
         name,address=jsd['name'],jsd['address']
         uname=session['username']
         date=jsd['date']
         start=jsd['start']
         end=jsd['end']
-        color=jsd['color']
-        print(name,address,uname,date,start,end,color)
+        groupID =jsd['groupID']
+        print(name,address,uname,date,start,end,groupID)
     if (jsd['st'] =='edit'):
         event_id=int(jsd['ido'])
         cur.execute('UPDATE event SET eventname=?,address=?,username=?,date=?,\
                     start=?,end=?,color=? WHERE eventID=?',(name,address,uname,date,start,end,color,event_id))
           
    
-    if (jsd['st']=='add'):
-        cur.execute('INSERT INTO event(eventname,address,username,date,start,end,color)\
-                    VALUES (?,?,?,?,?,?,?)',(name,address,uname,date,start,end,color))
+    if (jsd['st']=='addEv'):
+        cur.execute('INSERT INTO event(eventname,address,username,date,start,end,groupID)\
+                    VALUES (?,?,?,?,?,?,?)',(name,address,uname,date,start,end,groupID))
         ##for send email
         con.commit()
         cur.row_factory= dict_factory
@@ -309,10 +297,9 @@ def edit_event():
         message_body= 'Hello '+fname+', \n We add an event to you pro_calendar.\n The deitel is:\n EVENT NAME:\t'\
         +name+'\n ADDRESS:\t'+address+'\n Event Date:\t'+str(date)+'\n Start Time:\t'+str(start)\
         +'\n End Time:\t'+str(end)+'\n \n Pro-claenar team'
-        
         send_email(email,message_body,subjects)
     
-    if (jsd['st']=='del'):
+    if (jsd['st']=='delEv'):
         a=int(jsd['ido'])
         cur.execute('DELETE FROM event WHERE eventID = ?;',(a,))
      
@@ -329,8 +316,49 @@ def edit_event():
     return {'day_data':day_data}
 
 
- 
 
+
+@app.route('/edit_group', methods = ['POST','GET'])
+@is_logged_in
+def edit_group():
+    
+    jsd = json.loads(request.form['id'])
+    con=sql.connect("mdn1.db")
+    cur=con.cursor()
+    print(jsd)
+    if(jsd['st'] =='editGr' or jsd['st'] =='addGr'):
+        name,color=jsd['name'],jsd['color']
+        uname,show=session['username'],True
+        print(name,color,uname,show)
+    if (jsd['st'] =='editGr'):
+        groupID=int(jsd['groupID'])
+        cur.execute('UPDATE groups SET name=?,color=?,username=?,show=? WHERE groupID=?',(name,color,uname,show,groupID))
+    if (jsd['st']=='addGr'):
+        cur.execute('INSERT INTO groups(name,username,color,show) VALUES (?,?,?,?)',(name,uname,color,show))
+        ##for send email
+        con.commit()
+        cur.row_factory= dict_factory
+        cur.execute('SELECT * FROM groups WHERE username=?',(uname,))
+        a=cur.fetchall()
+    if (jsd['st']=='showChange'):
+        
+        cur.execute('UPDATE groups SET show=? WHERE groupID=?',(jsd['show'],int(jsd['id'])))
+    
+    if (jsd['st']=='delGr'):
+        a=int(jsd['id'])
+        print(a)
+        cur.execute('DELETE FROM groups WHERE groupID = ?;',(a,))
+     
+    con.commit()
+    con.close()
+    con=sql.connect("mdn1.db")
+    con.row_factory =dict_factory
+    cur=con.cursor()
+    cur.execute("select * from groups where username = ?",(session['username'],))
+    global groups
+    groups =cur.fetchall()
+    con.close()
+    return 'ok'
 
 def dict_factory(cursor, row):
     d = {}
