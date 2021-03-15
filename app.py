@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, session ,url_for,redirect,flash ,logging ,jsonify,json
 from flask_mail import Mail, Message
+from flask_apscheduler import APScheduler
+from threading import Thread
 import sqlite3 as sql
 from functools import wraps
 from datetime import date,time,datetime,timedelta
@@ -11,26 +13,43 @@ import random
 #from passlib.hash import sha256_crypt
 
 app = Flask(__name__)
+
 DATABASE ='/mdn1.db'
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
+###this part for scheduler
+scheduler = APScheduler()# scheduler object for reminder email
+scheduler.init_app(app) # init it whit app
+scheduler.start() # start to worke 
+
+
+##### this part for email sender 
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'procalendar.mehrdad@gmail.com'
 app.config['MAIL_PASSWORD'] = 'Nasrin@1234'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
+#manager = Manager(app)
 mail = Mail(app)
+def shell_context():
+    import os, sys
+    return dict(app=app, os=os, sys=sys)
 
+#manager.add_command("shell", Shell(make_context=shell_context))
 
+def async_send_mail(app, msg):
+    with app.app_context():
+        mail.send(msg)
 
 
 
 def send_email(email_address,message_body,subjects):
     msg = Message(subjects, sender = 'procalendar.mehrdad@gmail.com', recipients = [email_address])
     msg.body = message_body
-    mail.send(msg)
-    return
+    thr = Thread(target=async_send_mail, args=[app, msg])
+    thr.start()
+    return thr
 
 
 
@@ -61,7 +80,7 @@ def adduser():
             iemail=request.form['iemail']
             lname=request.form['lname']
             fname=request.form['fname']
-            ViewSet=''
+            ViewSet={'first_day':6,'timeInterval':60}
             print(ViewSet)
             print(uname +","+ psw +","+ fname +","+lname+","+iemail+","+ ViewSet)
             with sql.connect("mdn1.db") as con:
@@ -137,11 +156,12 @@ def dashboard():
     cur.execute("select * from users where username = ?",(session['username'],))
     global user 
     global groups
-    user=cur.fetchall()
+    user=cur.fetchall()[0]
+    user['ViewSet']=json.loads(user['ViewSet'])
     cur.execute("select * from groups where username = ?",(session['username'],))
     groups=cur.fetchall()
     con.close()
-    return render_template('index.html')
+    return render_template('index.html',user=user)
 
 
 ## month calendar MVC 
@@ -153,7 +173,11 @@ def month_calendar():
     data_rec=json.loads(request.form['data'])   
     month = data_rec['month']
     year = data_rec['year']
-    fd = data_rec['first_day']
+    global ViewSet
+    global user
+    ViewSet = data_rec['ViewSet']
+    user['ViewSet']=ViewSet
+    fd=int(ViewSet['first_day'])
     week_name={0:'MONDAY',1:'TUESDAY',2:'WEDNESDAY',3:'THURSDAY',4:'FRIDAY',5:'SATURDAY',6:'SUNDAY'}
     j,month_name=0,{}
     for i in calendar.month_name:
@@ -187,8 +211,7 @@ def month_calendar():
             k['cur']='p'  
         k['name']= month_name[i[1]]+" 1" if i[2]==1 else i[2]
         k['id'] = date(i[0],i[1],i[2]).strftime('%Y-%m-%d')
-        day_header.append(k)
-   
+        day_header.append(k)   
     # make day_event this is a list which it contains 42 list of event bjects 
     con=sql.connect("mdn1.db")
     con.row_factory =dict_factory
@@ -267,7 +290,7 @@ def edit_event():
     jsd = json.loads(request.form['id'])
     con=sql.connect("mdn1.db")
     cur=con.cursor()
-    print(jsd)
+    #print(jsd)
 
     if(jsd['st'] =='editEv' or jsd['st'] =='addEv'):
         name,address=jsd['name'],jsd['address']
@@ -276,63 +299,66 @@ def edit_event():
         start=jsd['start']
         end=jsd['end']
         groupID =jsd['groupID']
-        print(name,address,uname,date,start,end,groupID)
+        reminder=jsd['reminder']
+        #print(name,address,uname,date,start,end,groupID)
     if (jsd['st'] =='edit'):
         event_id=int(jsd['ido'])
         cur.execute('UPDATE event SET eventname=?,address=?,username=?,date=?,\
-                    start=?,end=?,color=? WHERE eventID=?',(name,address,uname,date,start,end,color,event_id))
-          
+                    start=?,end=?,group=? reminder=? WHERE eventID=?',(name,address,uname,date,start,end,groupID,reminder,event_id))
+        scheduler.remove_job(str(event_id))
+
    
     if (jsd['st']=='addEv'):
-        cur.execute('INSERT INTO event(eventname,address,username,date,start,end,groupID)\
-                    VALUES (?,?,?,?,?,?,?)',(name,address,uname,date,start,end,groupID))
-        ##for send email
-        con.commit()
-        cur.row_factory= dict_factory
-        cur.execute('SELECT * FROM users WHERE username=?',(uname,))
-        a=cur.fetchall()
-        email=a[0]['email']
-        fname=a[0]['fname']
+        cur.execute('INSERT INTO event(eventname,address,username,date,start,end,groupID,reminder)\
+                    VALUES (?,?,?,?,?,?,?,?)',(name,address,uname,date,start,end,groupID,reminder))
+        email=user['email']
+        fname=user['fname']
         subjects='PRO-Calendar You Add an event'
-        message_body= 'Hello '+fname+', \n We add an event to you pro_calendar.\n The deitel is:\n EVENT NAME:\t'\
+        message_body= 'Hello '+fname+', \n You add an event to your pro_calendar.\n The detail is:\n EVENT NAME:\t'\
         +name+'\n ADDRESS:\t'+address+'\n Event Date:\t'+str(date)+'\n Start Time:\t'+str(start)\
         +'\n End Time:\t'+str(end)+'\n \n Pro-claenar team'
         send_email(email,message_body,subjects)
+        
     
     if (jsd['st']=='delEv'):
         a=int(jsd['ido'])
         cur.execute('DELETE FROM event WHERE eventID = ?;',(a,))
-     
+        scheduler.remove_job(str(a))
+    
     con.commit()
     con.close()
     con=sql.connect("mdn1.db")
     con.row_factory =dict_factory
     cur=con.cursor()
-    
+    if jsd['st']=='delEv':  #for delete mw should .........???
+        date='2021-03-02'
     cur.execute("select * from event where username = ? and date = ? Order by date,start;",(session['username'],date))
     events =cur.fetchall()
+
+    #add_sch is not in proper place
+    add_sch(events,user)
     con.close()
     day_data={'day_event':events,'day_id':date}
     return {'day_data':day_data}
 
 
 
-
 @app.route('/edit_group', methods = ['POST','GET'])
 @is_logged_in
-def edit_group():
-    
+def edit_group():    
     jsd = json.loads(request.form['id'])
     con=sql.connect("mdn1.db")
     cur=con.cursor()
-    print(jsd)
+       
     if(jsd['st'] =='editGr' or jsd['st'] =='addGr'):
         name,color=jsd['name'],jsd['color']
         uname,show=session['username'],True
         print(name,color,uname,show)
+    
     if (jsd['st'] =='editGr'):
         groupID=int(jsd['groupID'])
         cur.execute('UPDATE groups SET name=?,color=?,username=?,show=? WHERE groupID=?',(name,color,uname,show,groupID))
+   
     if (jsd['st']=='addGr'):
         cur.execute('INSERT INTO groups(name,username,color,show) VALUES (?,?,?,?)',(name,uname,color,show))
         ##for send email
@@ -340,14 +366,29 @@ def edit_group():
         cur.row_factory= dict_factory
         cur.execute('SELECT * FROM groups WHERE username=?',(uname,))
         a=cur.fetchall()
-    if (jsd['st']=='showChange'):
-        
+
+    if (jsd['st']=='showChange'):        
         cur.execute('UPDATE groups SET show=? WHERE groupID=?',(jsd['show'],int(jsd['id'])))
-    
+
     if (jsd['st']=='delGr'):
         a=int(jsd['id'])
         print(a)
         cur.execute('DELETE FROM groups WHERE groupID = ?;',(a,))
+    
+    if (jsd['st']=='save_user'):
+        #print(jsd)
+        global user
+        password=user['password']
+        lname=user['lname']
+        fname=user['fname']
+        ViewSet=user['ViewSet']
+        print(ViewSet)
+        ViewSet=json.dumps(ViewSet)
+        uname=user['username']
+        print(ViewSet)
+        print(uname)
+        cur.execute('UPDATE users SET password=? ,lname=?,fname=?, ViewSet=? WHERE username=?',(password,lname,fname,ViewSet,uname))
+ 
      
     con.commit()
     con.close()
@@ -359,6 +400,42 @@ def edit_group():
     groups =cur.fetchall()
     con.close()
     return 'ok'
+
+
+
+def add_sch(events,user):
+    for event in events :
+        ind= event['reminder']
+        if ind==0 :
+            return
+        time_before={1:0,2:5,3:15,4:30,5:60,6:120,7:1440,8:1080}
+        delta=timedelta(minutes=time_before[ind])
+        if ind==8 :
+            delta=timedelta(days=7)
+        d=event['date']+' '+event['start']
+        r_d=datetime.strptime(d,'%Y-%m-%d %H:%M')
+        print(r_d)
+        r_d=r_d -delta
+        print(r_d)
+        e_id=str(event['eventID'])
+        scheduler.add_job(func=scheduled_task, trigger='date', run_date=r_d,args=[event,user,e_id], id=e_id)
+    return
+
+def scheduled_task(event,user,e_id):
+    message_body=user['fname']+', you have an upcomming event/n at '+event['date']+' '+event['start']
+    subjects='reminder'
+    
+   
+    send_email(user['email'],message_body,subjects)
+    return
+
+    
+
+
+
+#def add_sch(email,message_body,subjects,date,start,event_id):
+#    return
+
 
 def dict_factory(cursor, row):
     d = {}
