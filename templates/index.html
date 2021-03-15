@@ -22,17 +22,24 @@
             <label for="title">Title:</label>
             <input type="text" id="title" name="title" ><br>
             <label for="date"  >Date:</label>
-            <input type="date" id="date" name="date"><br>
+            <input type="date" id="date" name="date" ><br>
             <label for="start">START Time:</label>
-            <input type="time" id="start" name="start" ><br>
+            <select id="start" name="start" value='00:00' onchange="changeEnd()">
+                <option ></option>
+            </select> <br>
             <label for="end">End Time:</label>
-            <input type="time" id="end" name="end" ><br>
+            <select id="end" name="end" value='00:00' ></select> <br>
             <label for="group">Group:</label>
             <select id="group_list" onchange="changroup()">
                 <option id=grList-0></option>
             </select><br>
             <label for="descr">Description:</label>
             <textarea id="descr" name="descr" rows="5" cols="25"></textarea><br>
+            <label for="reminder">Reminder:</label>
+            <select id="reminder" name="reminder"  >
+                <option ></option>
+            </select> <br>
+
             <input type="button" onclick="checkEvent()" value="Submit" id="addEventBtn">
         </div>
        
@@ -72,14 +79,14 @@
                 <label for="theme3">Theme 3</label>
             </div>
             <!-- start of week pop-up-->
-            <div>
+            <div id='startWeek'>
                 <p>Start of week</p>
-                <input type="radio" id="Sat-start" name="first_day" Value=5>
-                <label for="Sat-start">Saturday</label>
-                <input type="radio" id="sun-start" name="first_day" Value=6 checked>
-                <label for="sunday-start">Sunday</label>
-                <input type="radio" id="mon-start" name="first_day" Value=0>
-                <label for="mon-start">Monday</label>
+                <input type="radio" id="startWeek5" name="first_day" Value=5>
+                <label for="startWeek5">Saturday</label>
+                <input type="radio" id="startWeek6" name="first_day" Value=6 >
+                <label for="startWeek6">Sunday</label>
+                <input type="radio" id="startWeek0" name="first_day" Value=0>
+                <label for="startWeek0">Monday</label>
                 
             </div>
             <!-- week numbers pop-up-->
@@ -91,12 +98,14 @@
                 <label for="num-wk-no">No</label>
             </div>
             <!-- time format pop-up-->
-            <div>
-                <p>Time format</p>
-                <input type="radio" id="12-hr" name="12-hr">
-                <label for="12-hr">12 hour</label>
-                <input type="radio" id="24-hr" name="24-hr">
-                <label for="24-hr">24 hour</label>
+            <div id='timeSlot'>
+                <p>Time Slot</p>
+                <input type="radio" id="t15" name="timeInt"value=15>
+                <label for="t15">15 Min</label>
+                <input type="radio" id="t30" name="timeInt"value=30>
+                <label for="t30">30 Min</label>
+                <input type="radio" id="t60" name="timeInt" value=60>
+                <label for="t60">1 hour</label>
             </div>
         </div>
     </div> <!-- /menu -->
@@ -130,95 +139,51 @@
             <div class="day grid-col-6">Friday</div>
             <div class="day grid-col-7 last-col">Saturday</div>
             <!-- /row1 -->
+                
+            <div class="grid-col-1">
+                <div class="date"></div><div class="event-area"></div>
+            </div>
+            <div class="grid-col-2">
+                <div class="date"></div><div class="event-area"></div>
+            </div>
+            <div class="grid-col-3">
+                <div class="date"></div><div class="event-area"></div>
+            </div>
+            <div class="grid-col-4">
+                <div class="date"></div><div class="event-area"></div>
+            </div>
+            <div class="grid-col-5">
+                <div class="date"></div><div class="event-area"></div>
+            </div>
+            <div class="grid-col-6">
+                <div class="date"></div><div class="event-area"></div>
+            </div>
+            <div class="grid-col-7 last-col">
+                <div class="date"></div><div class="event-area"></div>
+            </div>
            
             
-            <div class="grid-col-1">
-                <div class="date"></div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-2">
-                <div class="date"></div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-3">
-                <div class="date"></div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-4">
-                <div class="date"></div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-5">
-                <div class="date"></div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-6">
-                <div class="date">1</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-7 last-col">
-                <div class="date">2</div>
-                <div class="event-area"></div>
-            </div>
-            <!-- /row2 -->
-            <!-- row3 -->
-            <div class="grid-col-1">
-                <div class="date">3</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-2">
-                <div class="date">4</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-3">
-                <div class="date">5</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-4">
-                <div class="date">6</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-5">
-                <div class="date">7</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-6">
-                <div class="date">8</div>
-                <div class="event-area"></div>
-            </div>
-            <div class="grid-col-7 last-col">
-                <div class="date">9</div>
-                <div class="event-area"></div>
-            </div>
-            
-            <!-- row7 -->
+             <!-- row7 -->
             <div class="grid-col-1 btm-row">
-                <div class="date">31</div>
-                <div class="event-area"></div>
+                <div class="date"></div> <div class="event-area"></div>
             </div>
             <div class="grid-col-2 btm-row">
-                <div class="date"></div>
-                <div class="event-area"></div>
+                <div class="date"></div> <div class="event-area"></div>
             </div>
             <div class="grid-col-3 btm-row">
-                <div class="date"></div>
-                <div class="event-area"></div>
+                <div class="date"></div> <div class="event-area"></div>
             </div>
             <div class="grid-col-4 btm-row">
-                <div class="date"></div>
-                <div class="event-area"></div>
+                <div class="date"></div> <div class="event-area"></div>
             </div>
             <div class="grid-col-5 btm-row">
-                <div class="date"></div>
-                <div class="event-area"></div>
+                <div class="date"></div> <div class="event-area"></div>
             </div>
             <div class="grid-col-6 btm-row">
-                <div class="date"></div>
-                <div class="event-area"></div>
+                <div class="date"></div> <div class="event-area"></div>
             </div>
             <div class="grid-col-7 btm-row last-col">
-                <div class="date"></div>
-                <div class="event-area"></div>
+                <div class="date"></div> <div class="event-area"></div>
             </div>
             <!-- /row7 -->
         </div>
@@ -228,7 +193,10 @@
     
 
 </body>
-
+<script>
+    user={{user|tojson}} 
+    
+</script>
 <script src="{{url_for('static', filename = 'script.js')}}"></script>
 
 
