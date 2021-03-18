@@ -20,7 +20,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 ###this part for scheduler
 scheduler = APScheduler()# scheduler object for reminder email
 scheduler.init_app(app) # init it whit app
-scheduler.start() # start to worke 
+scheduler.start() # start to work
 
 
 ##### this part for email sender 
@@ -74,21 +74,21 @@ def ne():
 @app.route('/aduser', methods=['POST','GET'])
 def adduser():
     if request.method =='POST':
+        uname=request.form['uname']
+        psw=request.form['psw']
+        iemail=request.form['iemail']
+        lname=request.form['lname']
+        fname=request.form['fname']
+        ViewSet={'first_day':6,'timeInterval':60,'viewLy':'month'}
+        ViewSet=json.dumps(ViewSet)
+        print(ViewSet)
+        print(uname +","+ psw +","+ fname +","+lname+","+iemail+","+ ViewSet)
         try:
-            uname=request.form['uname']
-            psw=request.form['psw']
-            iemail=request.form['iemail']
-            lname=request.form['lname']
-            fname=request.form['fname']
-            ViewSet={'first_day':6,'timeInterval':60}
-            print(ViewSet)
-            print(uname +","+ psw +","+ fname +","+lname+","+iemail+","+ ViewSet)
             with sql.connect("mdn1.db") as con:
                 cur=con.cursor()
-                cur.execute('INSERT INTO users(username,password,email,lname,fname,ViewSet)\
-                             VALUES (?,?,?,?,?,?)', (uname,psw,iemail,lname,fname,ViewSet))
+                cur.execute('INSERT INTO users(username,password,email,lname,fname,ViewSet) VALUES (?,?,?,?,?,?)', (uname,psw,iemail,lname,fname,ViewSet))
                 con.commit()
-                cur.execute('INSERT INTO groups(name,username,color,show) VALUES (?,?,?,?) ',(uname,uname,'#8080ff',True))            
+                cur.execute('INSERT INTO groups(name,username,color,showG) VALUES (?,?,?,?) ',(uname,uname,'#8080ff',True))            
                 con.commit()
                 msg=''
         except:
@@ -147,13 +147,13 @@ def logi():
 
 
 ##dashboard
-@app.route('/doshbord')
+@app.route('/dashboard')
 @is_logged_in
 def dashboard():   
     con=sql.connect("mdn1.db")
     con.row_factory =dict_factory
     cur=con.cursor()
-    cur.execute("select * from users where username = ?",(session['username'],))
+    cur.execute("select username , email, lname, fname, ViewSet from users where username = ?",(session['username'],))
     global user 
     global groups
     user=cur.fetchall()[0]
@@ -161,7 +161,14 @@ def dashboard():
     cur.execute("select * from groups where username = ?",(session['username'],))
     groups=cur.fetchall()
     con.close()
-    return render_template('index.html',user=user)
+    if user['ViewSet']['viewLy']=='week':
+        print('weeeeeeeeeeeeeeeeeek')
+        return render_template('weekly.html',user=user)
+    if user['ViewSet']['viewLy']=='year':
+        return render_template('yearly.html',user=user)
+    if user['ViewSet']['viewLy']=='day':
+        return render_template('dayly.html',user=user)        
+    return render_template('monthly.html',user=user)
 
 
 ## month calendar MVC 
@@ -173,29 +180,15 @@ def month_calendar():
     data_rec=json.loads(request.form['data'])   
     month = data_rec['month']
     year = data_rec['year']
+    dayToV =data_rec['dayToV']
     global ViewSet
     global user
     ViewSet = data_rec['ViewSet']
     user['ViewSet']=ViewSet
     fd=int(ViewSet['first_day'])
-    week_name={0:'MONDAY',1:'TUESDAY',2:'WEDNESDAY',3:'THURSDAY',4:'FRIDAY',5:'SATURDAY',6:'SUNDAY'}
-    j,month_name=0,{}
-    for i in calendar.month_name:
-      month_name[j]=i
-      j+=1
-#this is first day of week 0=monday 6=sunday 5=saturday 
-    c=calendar.Calendar(firstweekday=fd)
-#make a dictionay for month names
-    j,month_name=0,{}
-    for i in calendar.month_name:
-      month_name[j]=i
-      j+=1
-#make proper month header for day
+    week_header,week_abbr,month_name,month_abbr,c = calendName(fd)
     month_header=month_name[month]+" "+str(year)
-#make proper week header (at first i made a dictionary but the dicide to make a list)
-    week_header=[]
-    for i in c.iterweekdays():
-      week_header.append(week_name[i])  
+
 #make day_header {0:{name:28,cur:c}}  p/c/n are the posible value for cur
 # maybe we want to show them in another style
     next_month=((month)%12)+1
@@ -220,13 +213,101 @@ def month_calendar():
     day_event=[]
     for i in day_header:
         day_id = i['id'] 
-        cur.execute("select eventname ,groupID, start,eventID  from event where username = ?\
-        and date = ? order by start",(uname,day_id))
+        cur.execute("select event.eventname ,groups.color, event.start,event.eventID \
+        from event natural join groups where groups.showG=1 and \
+            event.date =? and event.username=? order by event.start",(day_id,uname))
         day_event.append(cur.fetchall())
     con.close()  
+    #print (day_event)
     data={'month_header':month_header,'week_header':week_header,'user':user,\
     'day_header':day_header,'day_event':day_event,'groups':groups}
+
     return {'data':data}
+
+@app.route('/week_calendar',methods = ['POST','GET'])
+@is_logged_in
+def week_calendar():
+   
+#   if method != 'POST" return redirect 
+    data_rec=json.loads(request.form['data'])   
+    month = data_rec['month']
+    year = data_rec['year']
+    dayToV = data_rec['dayToV']
+    global ViewSet
+    global user
+    ViewSet = data_rec['ViewSet']
+    user['ViewSet']=ViewSet
+    fd=int(ViewSet['first_day'])
+    week_header,week_abbr,month_name,month_abbr,c = calendName(fd)
+    j=0
+    for i in c.itermonthdays4(year,month):
+        if (i[1]==month and i[2]==dayToV):
+            break
+        j+=1
+    st=(j//7)*7
+    wekk=[]
+    for i in c.itermonthdays4(year,month):
+        if(st<=0 and st>-7):
+            hd=month_abbr[i[1]]+' '+str(i[2])
+            wekk.append({'week_head':hd,'id':date(i[0],i[1],i[2]).strftime('%Y-%m-%d'),'weekS':week_abbr[i[3]]+' '+hd})
+        st-=1
+    #print(wekk)
+    if wekk[0]['week_head'].split(' ')[0]==wekk[-1]['week_head'].split(' ')[0]:
+        head_cal_week=wekk[0]['week_head']+'-'+wekk[-1]['week_head'].split(' ')[1]+','+str(year)
+    else:
+        head_cal_week=wekk[0]['week_head']+'-'+wekk[-1]['week_head']+','+str(year)
+    k=ViewSet['timeInterval']
+    t1= datetime(2020,2,2,0,0)
+    td=timedelta(minutes=ViewSet['timeInterval'])
+    con=sql.connect("mdn1.db")
+    con.row_factory =dict_factory
+    cur=con.cursor()
+    uname=session['username']
+    time_header=[]
+    time_event=[]
+    for i in range(0,1440,k):
+        ta=t1.strftime('%H:%M')
+        time_header.append(ta)
+        tb= (t1+td).strftime('%H:%M')
+        for j in wekk:
+            cur.execute("select event.eventname , groups.color, event.eventID \
+            from event natural join groups where groups.showG=1 and  event.date =? \
+            and event.username=? and ((event.start >= ? and event.start < ? ) or \
+            (event.endt > ? and  event.endt <= ?) or ( event.start <= ? and  ? < event.endt))\
+            order by event.start",(j['id'],uname,ta,tb,ta,tb,ta,ta))
+            time_event.append(cur.fetchall())
+        t1+=td
+    #print(time_header)
+    #print(time_event)
+    
+    con.close()  
+    
+    data = {'head_cal_week':head_cal_week,'wekk':wekk,'user':user,'time_header':time_header,'time_event':time_event,'groups':groups}
+    return {'data':data}
+
+
+
+def calendName(fd):
+    week_name={0:'MONDAY',1:'TUESDAY',2:'WEDNESDAY',3:'THURSDAY',4:'FRIDAY',5:'SATURDAY',6:'SUNDAY'}
+    month_name=[]
+    for i in calendar.month_name:
+        month_name.append(i)
+# month abbr 
+    month_abbr=[]
+    for i in calendar.month_abbr:
+        month_abbr.append(i)
+#this is first day of week 0=monday 6=sunday 5=saturday 
+    c=calendar.Calendar(firstweekday=fd)
+#make proper week header (to make a list)
+    week_header=[]
+    for i in c.iterweekdays():
+        week_header.append(week_name[i]) 
+#make week abbr
+    week_abbr=[]
+    for i in calendar.day_abbr:
+        week_abbr.append(i) 
+    return week_header,week_abbr,month_name,month_abbr,c
+
 
 
 ##logout
@@ -241,7 +322,6 @@ def logout():
 
 #checkuser
 @app.route('/usercheck',methods = ['POST','GET']) 
-@is_logged_in 
 def checkuser():
     con=sql.connect("mdn1.db")
     cur=con.cursor()
@@ -256,8 +336,8 @@ def checkuser():
         cur.row_factory= dict_factory
         cur.execute('SELECT * FROM users WHERE email=?',(checkReq['iemail'],))
         a=cur.fetchall()
-        print(checkReq['iemail'])
-        print(a)
+        #print(checkReq['iemail'])
+        #print(a)
         con.close()
         return {'pass':(len(a)==0 )}
     if checkReq['flag'] == 'validemail':
@@ -297,26 +377,25 @@ def edit_event():
         uname=session['username']
         date=jsd['date']
         start=jsd['start']
-        end=jsd['end']
+        endt=jsd['endt']
         groupID =jsd['groupID']
         reminder=jsd['reminder']
-        #print(name,address,uname,date,start,end,groupID)
+        #print(name,address,uname,date,start,endt,groupID)
     if (jsd['st'] =='edit'):
         event_id=int(jsd['ido'])
         cur.execute('UPDATE event SET eventname=?,address=?,username=?,date=?,\
-                    start=?,end=?,group=? reminder=? WHERE eventID=?',(name,address,uname,date,start,end,groupID,reminder,event_id))
+                    start=?,endt=?,group=? reminder=? WHERE eventID=?',(name,address,uname,date,start,endt,groupID,reminder,event_id))
         scheduler.remove_job(str(event_id))
-
    
     if (jsd['st']=='addEv'):
-        cur.execute('INSERT INTO event(eventname,address,username,date,start,end,groupID,reminder)\
-                    VALUES (?,?,?,?,?,?,?,?)',(name,address,uname,date,start,end,groupID,reminder))
+        cur.execute('INSERT INTO event(eventname,address,username,date,start,endt,groupID,reminder)\
+                    VALUES (?,?,?,?,?,?,?,?)',(name,address,uname,date,start,endt,groupID,reminder))
         email=user['email']
         fname=user['fname']
         subjects='PRO-Calendar You Add an event'
         message_body= 'Hello '+fname+', \n You add an event to your pro_calendar.\n The detail is:\n EVENT NAME:\t'\
         +name+'\n ADDRESS:\t'+address+'\n Event Date:\t'+str(date)+'\n Start Time:\t'+str(start)\
-        +'\n End Time:\t'+str(end)+'\n \n Pro-claenar team'
+        +'\n End Time:\t'+str(endt)+'\n \n Pro-claenar team'
         send_email(email,message_body,subjects)
         
     
@@ -352,15 +431,15 @@ def edit_group():
        
     if(jsd['st'] =='editGr' or jsd['st'] =='addGr'):
         name,color=jsd['name'],jsd['color']
-        uname,show=session['username'],True
-        print(name,color,uname,show)
+        uname,showG=session['username'],True
+        #print(name,color,uname,showG)
     
     if (jsd['st'] =='editGr'):
         groupID=int(jsd['groupID'])
-        cur.execute('UPDATE groups SET name=?,color=?,username=?,show=? WHERE groupID=?',(name,color,uname,show,groupID))
+        cur.execute('UPDATE groups SET name=?,color=?,username=?,showG=? WHERE groupID=?',(name,color,uname,showG,groupID))
    
     if (jsd['st']=='addGr'):
-        cur.execute('INSERT INTO groups(name,username,color,show) VALUES (?,?,?,?)',(name,uname,color,show))
+        cur.execute('INSERT INTO groups(name,username,color,showG) VALUES (?,?,?,?)',(name,uname,color,showG))
         ##for send email
         con.commit()
         cur.row_factory= dict_factory
@@ -368,26 +447,27 @@ def edit_group():
         a=cur.fetchall()
 
     if (jsd['st']=='showChange'):        
-        cur.execute('UPDATE groups SET show=? WHERE groupID=?',(jsd['show'],int(jsd['id'])))
+        cur.execute('UPDATE groups SET showG=? WHERE groupID=?',(jsd['showG'],int(jsd['id'])))
 
     if (jsd['st']=='delGr'):
         a=int(jsd['id'])
-        print(a)
+        #print(a)
         cur.execute('DELETE FROM groups WHERE groupID = ?;',(a,))
     
     if (jsd['st']=='save_user'):
         #print(jsd)
         global user
-        password=user['password']
+        user=jsd['user']
+        #password=user['password']
         lname=user['lname']
         fname=user['fname']
         ViewSet=user['ViewSet']
-        print(ViewSet)
+        #print(ViewSet)
         ViewSet=json.dumps(ViewSet)
         uname=user['username']
         print(ViewSet)
         print(uname)
-        cur.execute('UPDATE users SET password=? ,lname=?,fname=?, ViewSet=? WHERE username=?',(password,lname,fname,ViewSet,uname))
+        cur.execute('UPDATE users SET lname=?,fname=?, ViewSet=? WHERE username=?',(lname,fname,ViewSet,uname))
  
      
     con.commit()
@@ -414,15 +494,13 @@ def add_sch(events,user):
             delta=timedelta(days=7)
         d=event['date']+' '+event['start']
         r_d=datetime.strptime(d,'%Y-%m-%d %H:%M')
-        print(r_d)
         r_d=r_d -delta
-        print(r_d)
         e_id=str(event['eventID'])
         scheduler.add_job(func=scheduled_task, trigger='date', run_date=r_d,args=[event,user,e_id], id=e_id)
     return
 
 def scheduled_task(event,user,e_id):
-    message_body=user['fname']+', you have an upcomming event/n at '+event['date']+' '+event['start']
+    message_body=user['fname']+', you have an upcomming event\n on '+event['date']+' ,at '+event['start']+'\n pro-calendar team'
     subjects='reminder'
     
    
