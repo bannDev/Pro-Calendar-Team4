@@ -5,3 +5,4 @@ Tonight I worked on grouping I changed the databse and it possible to makinging 
 I worked on cron job for reminder email and it the server side can send email for reminder at right time for each event.(3/14/21 Mehrdad)
 I also work on some options like first_day of week ,time slot for inpot time and work on database to save these setting as an object for each user(3/14/21 Mehrdad)
 I also almost finished monthly view on front-end javascript (3/14/21 Mehrdad)
+I worked on weekly view and splite html files and java scripts (3/18/21 Mehrdad)
