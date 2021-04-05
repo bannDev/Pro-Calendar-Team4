@@ -1,0 +1,83 @@
+ProCalendar App Installation Instructions
+1. SQLITE
+•	Go to: https://www.sqlite.org/download.html
+•	Select the download file for your system and download it.  For Windows 10, I selected:
+sqlite-tools-win32-x86-3350300.zip
+•	Then create a new folder e.g., C:\sqlite by opening a terminal window via command prompt and type:
+Cd\
+Md sqlite
+•	Open Windows File Explorer
+•	Go to your Downloads directory
+•	Find the file you just downloaded
+•	Extract the file (right click on the zip file and click on Extract, select a directory to send it to.)  3 files will be extracted and placed inside the directory you chose.  Please make sure the files end up under the sqlite directory you created.  The next step walks you through that.
+•	Copy or move those 3 files to c:\sqilte directory you just created 
+•	Go back to the command prompt terminal
+Type:
+Cd:\sqlite
+Type:
+Dir
+•	You should see three programs in the C:\sqlite folder as shown below:
+Sqldiff.exe
+Sqlite3.exe
+Sqlite3_analyzer.exe
+
+2. SQLIite Studio
+Go to: https://sqlitestudio.pl/
+Click DOWNLOAD
+•	Open Windows File Manager
+•	Go to your downloads directory
+•	Find the file you just downloaded
+Extract the file (right click on the zip file and click on Extract, select a directory to send them to. However they will be copied inside some directory.
+Note: if you open the directory and look for the sqlitestudio.exe file, right click, hit Pin to Task Bar is very helpful
+
+3. PYTHON
+•	Make sure Python is installed on your system
+•	I have version 3.8.5
+•	Get it from here: https://www.python.org/downloads/release/python-385/
+
+•	And I clicked this file: Windows x86-64 executable installer
+•	Click on open
+•	Check “Add Python 3.8 to PATH”
+•	And Click Install Now Make a note of the directory where it places it.
+•	Re-start machine 
+
+4. PROCALENDAR APP Installation and starting of server
+•	Unzip procalendar.zip to the directory you want procalendar in
+•	Open command prompt and change directory to procalendar directory you just unzipped everything to
+•	Type the following lines:
+Pip install flask
+python -m pip install -r requirements.txt 
+set flask_app=app
+set flask_env=development
+flask run
+
+5. RUNNING THE APP
+•	Open Google Chrome or your favorite browser
+•	Enter this URL:
+http://127.0.0.1:5000/
+•	The default user name the app is delivered with is: 
+Mehrdad 
+and the password is: 
+12345678
+
+6. LOOKING AT THE DATA AND THE TABLES WITHIN THE DATABASE USING SQLiteStudio
+Now that the app is installed you can click on your SQLlite studio icon and go to Database and click on Add a Database.  Go to the directory where you installed the ProCalendar app and open the database: mdn1.
+Double click on mdn1 and the tables are displayed for selection.
+
+7.  Next time you run the ProCalendar app what do you do?
+•	Open a terminal window, Command Prompt.
+•	Type the following lines:
+set flask_app=app
+set flask_env=development
+flask run
+•	Open Google Chrome or your favorite browser
+•	Enter this URL:
+http://127.0.0.1:5000/
+•	If you didn’t register yourself as a user, you will need to use the default user name the app is delivered with is: 
+Mehrdad 
+and the password is: 
+12345678
+
+
+
+
