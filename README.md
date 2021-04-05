@@ -25,7 +25,7 @@ The Pro Calendar is meant to be used for the sake of organization, and planning.
  * Flask
 
 ## Setup
-To run this project, install the source code and open the files on a code editor. There will be a link provided that will give access to the Pro Calendar application but is a work in progress.
+To run this project there will requirements to follow in a word document that contains information to all of the technologies listed, the folder is named Setup. Inside the folder there will be a folder named Installation that contains the word document. 
 
 
 ## Features
