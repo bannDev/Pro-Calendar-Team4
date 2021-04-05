@@ -25,7 +25,7 @@ The Pro Calendar is meant to be used for the sake of organization, and planning.
  * Flask
 
 ## Setup
-To run this project there will requirements to follow in a word document that contains information to all of the technologies listed, the folder is named Setup. Inside the folder there will be a folder named Installation that contains the word document. 
+To run this project there will requirements to follow in a word document that contains information to all of the technologies listed, the folder is named Setup. Inside the folder there will be 2 different file versions of the installation that contains the word document and a text file for quicker reading. 
 
 
 ## Features
