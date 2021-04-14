@@ -34,6 +34,7 @@
 .grid-container-1 {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
+    height: 100%;
 }
 
 .grid-container-2 {
@@ -42,8 +43,8 @@
 }
 
 [class*="grid-col-"] {
-    border-left: 1px solid black;
-    border-top: 1px solid black;
+    border-left: 1px solid darkgray;
+    border-top: 1px solid darkgray;
     padding: 5px;
 }
 
@@ -88,8 +89,8 @@
 }
 
 [class*="day-col-"] {
-    border-left: 1px solid black;
-    border-top: 1px solid black;
+    border-left: 1px solid darkgray;
+    border-top: 1px solid darkgray;
     padding: 5px;
 }
 
@@ -110,8 +111,8 @@
 }
 
 [class*="year-col-"] {
-    border-left: 1px solid black;
-    border-top: 1px solid black;
+    border-left: 1px solid darkgray;
+    border-top: 1px solid darkgray;
     padding: 5px;
 }
 
@@ -133,15 +134,15 @@
 .year-col-4 {
     grid-column-start: 7;
     grid-column-end: 9;
-    border-right: 1px solid black;
+    border-right: 1px solid darkgray;
 }
 
 .btm-row {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid darkgray;
 }
 
 .last-col {
-    border-right: 1px solid black;
+    border-right: 1px solid darkgray;
 }
 
 /* collapsible sidepanel menu */
@@ -197,9 +198,9 @@
 
 /* collapsible menu sections */
 /* collapse trigger button */
-.collapsible {
-    background-color: #eee;
-    color: #444;
+.collapsible, .menu-button {
+    background-color: darkgray;
+    color: white;
     cursor: pointer;
     padding: 18px;
     width: 100%;
@@ -211,7 +212,26 @@
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
 .active, .collapsible:hover {
-    background-color: #ccc;
+    background-color: darkorange;
+    color: white;
+}
+
+.link-button:link, .link-button:visited {
+    background-color: darkgray;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    text-decoration: none;
+}
+
+.menu-button:hover, .link-button:hover {
+    background-color: darkorange;
+    color: white;
 }
 
 /* collapsible content. Note: hidden by default */
@@ -219,7 +239,7 @@
     padding: 0 18px;
     display: none;
     overflow: hidden;
-    background-color: #f1f1f1;
+    background-color: whitesmoke;
 }
 
 /* main */
@@ -227,7 +247,9 @@
 
 .calendar-header {}
 
-.month {}
+.month {
+    color: darkorange;
+}
 
 .nav {
     text-align: right;
@@ -246,7 +268,7 @@
 }
 
 .event-area {
-    height: 50px;
+    height: 60px ;
 }
 
 fieldset {
@@ -303,4 +325,9 @@ form {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+/* account.html */
+.account-heading, .account-info {
+    display: inline-block;
 }
