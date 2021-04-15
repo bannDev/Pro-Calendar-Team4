@@ -29,8 +29,8 @@ function view() {
                 u.html('');
                 u.attr('id',wekk[j].id+' '+time_header[i]); u.css('border','')
                 for (l in time_event[a*7+j]) {
-                    u.append("<span style='background-color:" + time_event[a*7+j][l].color + "'id=" + time_event[a*7+j][l].eventID + ">" + time_event[a*7+j][l].eventname + "</span>" )
-                }
+                    u.append("<div style='background-color:" + time_event[a*7+j][l].color + "' id='" + time_event[a*7+j][l].eventID + "' class='event'>" + time_event[a*7+j][l].eventname + "</div>" )
+                } // <div style='background-color:fff' id='someid' class='event'>Event Name</div>
             }
             $('[class |="grid-col"]').eq(a*8+7).html(time_header[i])
         }
@@ -41,7 +41,7 @@ function view() {
         sb=b.toString().padStart(2,0)
         timee=sa+':'+sb
         ss1='[id="' + day + ' ' + timee + '"]'
-        $(ss1).css('border','3px outset red')    
+        $(ss1).css('border','3px solid var(--color)')    
         viewcom()
     }) 
 }

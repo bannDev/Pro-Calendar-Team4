@@ -31,20 +31,20 @@ function view() {
             e.parent().attr('id',day_header[i].id)
             if (day==day_header[i].id) {
                 //for border of today
-                e.parent().css('border','3px solid darkorange')
+                e.parent().css('border','3px solid var(--color)')
             } else {
                 e.parent().css('border','')
             }
             //current month color
             if (day_header[i].cur == 'c') {
-                e.css("color", "#111111");
+                e.css("color", "black");
                 continue
             }
             //previous and nex month color
             if (day_header[i].cur == 'n') {
-                e.css("color", "darkgray")
+                e.css("color", "var(--dark)")
             } else {
-                e.css("color" ,"darkgray")
+                e.css("color" ,"var(--dark)")
             }
         }
         //put day_event(s) on proper positions
@@ -53,7 +53,8 @@ function view() {
             e=$('.event-area').eq(i)
             e.empty();
             for (j in day_event[i]) {
-                e.append("<span style='background-color:" + day_event[i][j].color + "'id=" + day_event[i][j].eventID + ">" + day_event[i][j].eventname + "</span><br>")
+                e.append("<div style='background-color:" + day_event[i][j].color + "' id='" + day_event[i][j].eventID + "' class='event'>" + day_event[i][j].eventname + "</div><br>")
+                // <div style='background-color:fff' id='someid' class='event'>Event Name</div><br>
             }
         }
         viewcom()
