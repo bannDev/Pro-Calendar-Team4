@@ -8,36 +8,36 @@
             <!--<button>Close menu</button>-->
         </div>
         
-        <!-- add event collapsible section -->
+        <!-- add-event collapsible section -->
         <button type="button" class="collapsible">Add Event</button>
         <div class="add-event content">
             <label for="title">Title:</label>
-            <input type="text" id="title" name="title" ><br>
-            <label for="date"  >Date:</label>
-            <input type="date" id="date" name="date" ><br>
+            <input type="text" id="title" name="title"><br><br>
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date"><br><br>
             <label for="start">START Time:</label>
             <select id="start" name="start" value='00:00' onchange="changeEnd()">
                 <option ></option>
-            </select> <br>
+            </select> <br><br>
             <label for="end">End Time:</label>
-            <select id="end" name="end" value='00:00' ></select> <br>
+            <select id="end" name="end" value='00:00' ></select><br><br>
             <label for="group">Group:</label>
             <select id="group_list" onchange="changroup()">
                 <option id=grList-0></option>
-            </select><br>
+            </select><br><br>
             <label for="descr">Description:</label>
-            <textarea id="descr" name="descr" rows="5" cols="25"></textarea><br>
+            <textarea id="descr" name="descr" rows="5" cols="25"></textarea><br><br><br>
             <label for="reminder">Reminder:</label>
             <select id="reminder" name="reminder"  >
                 <option ></option>
-            </select><br>
+            </select><br><br>
             <input type="button" onclick="checkEvent()" value="Submit" id="addEventBtn">
         </div>
        
         <!-- groups collapsible section -->
         <button type="button" class="collapsible">Groups</button>
         <div class="groups content" id=groupm>
-            <div id = 'group-0'>
+            <div id='group-0'>
                 <input name=showG type="checkbox" onchange='changeshow(this)' >
                 <input  name=nameG type="text" size= 18 disabled='true' value="">
                 <input  name= colorG type=color  disabled='true'>
@@ -57,42 +57,45 @@
         <button type="button" class="collapsible">Settings</button>
         <div class="settings content">
             <!-- themes pop-up-->
-            <div>
+            <!-- <div>
                 <input type="radio" id="theme1" name="theme">
                 <label for="theme1">Theme 1</label>
                 <input type="radio" id="theme2" name="theme2">
                 <label for="theme2">Theme 2</label>
                 <input type="radio" id="theme3" name="theme3">
                 <label for="theme3">Theme 3</label>
-            </div>
+            </div> -->
             <!-- start of week pop-up-->
             <div id='startWeek'>
-                <p>Start of week</p>
+                <p>Start of week</p><br><br>
+                <div class="set">
                 <input type="radio" id="startWeek5" name="first_day" Value=5>
-                <label for="startWeek5">Saturday</label>
+                <label for="startWeek5">Saturday</label><br><br>
                 <input type="radio" id="startWeek6" name="first_day" Value=6 >
-                <label for="startWeek6">Sunday</label>
+                <label for="startWeek6">Sunday</label><br>
                 <input type="radio" id="startWeek0" name="first_day" Value=0>
                 <label for="startWeek0">Monday</label>
-                
+                </div>
             </div>
             <!-- week numbers pop-up-->
-            <div>
+            <!-- <div>
                 <p>Show week numbers</p>
                 <input type="radio" id="num-wk-yes" name="num-wk-yes">
                 <label for="num-wk-yes">Yes</label>
                 <input type="radio" id="num-wk-no" name="num-wk-no">
                 <label for="num-wk-no">No</label>
-            </div>
+            </div> -->
             <!-- time format pop-up-->
             <div id='timeSlot'>
-                <p>Time Slot</p>
+                <p>Time Slot</p><br><br>
+                <div class="set">
                 <input type="radio" id="t15" name="timeInt"value=15>
-                <label for="t15">15 Min</label>
+                <label for="t15">15 Min</label><br><br>
                 <input type="radio" id="t30" name="timeInt"value=30>
-                <label for="t30">30 Min</label>
+                <label for="t30">30 Min</label><br><br>
                 <input type="radio" id="t60" name="timeInt" value=60>
                 <label for="t60">1 hour</label>
+                </div>
             </div>
         </div>
         
@@ -105,21 +108,28 @@
     </div> <!-- /menu --> 
      
     <!-- calendar view navigation -->
-    <div class="col-9 views">
-        <button id='day' onclick='viewCh(this)'>Day</button>
-        <button id='week' onclick='viewCh(this)'>Week</button>
-        <button id='month' onclick='viewCh(this)'>Month</button>
-        <button id='year' onclick='viewCh(this)'>Year</button>
+    <div class="col-9 views-nav">
+        <div class="col-5"></div>
+        <div class="col-7 views">
+            <button id='day' onclick='viewCh(this)'>Day</button>
+            <button id='week' onclick='viewCh(this)'>Week</button>
+            <button id='month' onclick='viewCh(this)'>Month</button>
+            <button id='year' onclick='viewCh(this)'>Year</button>
+        </div>
     </div> <!-- /calendar view navigation -->
     
     <!-- main -->
     <div class="col-9 main">
         <!-- calendar header -->
         <div class="row calendar-header">
-            <!-- display month name and year -->
-            <div class="col-5 month"></div>
             <div class="col-3 nav">
                 <button type="button"  onclick ='back()'>Back</button>
+            </div>
+            <!-- display month name and year -->
+            <div class="col-5 month">
+                <h1>April 15, 2021</h1>
+            </div>
+            <div class="col-3 nav">
                 <button type="button"  onclick ="forward()">Forward</button>
             </div>
         </div> <!-- /calendar header -->
@@ -131,5 +141,6 @@
     <script>
         user={{user|tojson}} 
     </script>
+    <script src="{{url_for('static', filename = 'script.js')}}"></script>
 </body>
 {% endblock body %}

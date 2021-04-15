@@ -1,32 +1,36 @@
 {% extends 'menu_layout.html' %}
 
 {% block content %}
-<div>
-    <h1>Account Details</h1>
-    <div>
-        <p class="account-heading">Username:</p>
+<div class="account">
+
+        <h1>Account Details</h1>
+
+    <div class="account-details">
+        <b><p class="account-heading">Username:</p></b>
         <p class="account-info">Mehrdad</p>
     </div>
-    <div>
-        <p class="account-heading">First Name:</p>
+    <div class="account-details">
+        <b><p class="account-heading">First Name:</p></b>
         <p class="account-info">Mehrdad</p>
     </div>
-    <div>
-        <p class="account-heading">Last Name:</p>
-        <p class="account-info">Dehmoubed</p>
+    <div class="account-details">
+        <b><p class="account-heading">Last Name:</p>
+        </b>        <p class="account-info">Dehmoubed</p>
     </div>
-    <div>
-        <p class="account-heading">Email:</p>
-        <p class="account-info">mdn197406@gmail.com</p>
+    <div class="account-details">
+        <b><p class="account-heading">Email:</p>
+        </b>    <p class="account-info">mdn197406@gmail.com</p>
     </div>
-    <div>
-        <p class="account-heading">Password:</p>
-        <p class="account-info">********</p>
+    <div class="account-details">
+        <b><p class="account-heading">Password:</p>
+        </b>       <p class="account-info">********</p>
     </div>
     
     <!-- this button should change p tags with class="account-info" to input fields so the user can update their information in the database -->
-    <button type="button" class="account-button">Update account</button>
-    <button id='month' onclick='viewCh(this)'>Back to calendar</button>
+    <div class="account-buttons">
+        <button type="button">Update account</button>
+        <button id='month' onclick='viewCh(this)'>Back to calendar</button>
+    </div> <!-- /account-buttons -->
 </div>
 {% endblock content %}
 

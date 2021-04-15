@@ -1,18 +1,21 @@
 {% extends 'head_layout.html' %}
 
 {% block body %}
-<body>
-    <form action="{{url_for('logi')}}"  method="POST">
-        <label for="uname"><b>Username</b></label><br>
+<body class="row body log-body">
+    <div class="login-div">
+    <form class="login" action="{{url_for('logi')}}"  method="POST">
+        <label for="uname"><b>Username</b></label>
         <input type="varchar" placeholder="Enter Username" name="uname" minlegth='5' required onblur="check1()"><br><br>
 
-        <label for="psw"><b>Password</b></label><br>
+        <label for="psw"><b>Password</b></label>
         <input type="password" placeholder="Enter Password" name="psw" minlength="8" required><br><br>
         
-        <input type="submit" value="LOG IN"/><br>
+        <input class="login-button" type="submit" value="LOG IN"/><br><br>
         {{msg}}
-    </form>
-    
-    <a href="/register">Don't have an account?</a>
+    </form><br><br>
+    <div>
+    <a class="login-button" href="/register">Don't have an account?</a>
+    </div>
+    </div>
 </body>
 {% endblock body %}
