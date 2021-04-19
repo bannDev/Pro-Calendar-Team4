@@ -26,8 +26,8 @@ scheduler.start() # start to work
 # this part for email sender 
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'procalendar.mehrdad@gmail.com'
-app.config['MAIL_PASSWORD'] = 'Nasrin@1234'
+app.config['MAIL_USERNAME'] = 'procalendarapp@gmail.com'
+app.config['MAIL_PASSWORD'] = '23TunaBird9'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
@@ -229,6 +229,65 @@ def month():
 
 
 
+@app.route('/daily_calendar',methods = ['POST','GET'])
+@is_logged_in
+def daily():
+    data_rec=json.loads(request.form['data'])   
+    month = data_rec['month']
+    year = data_rec['year']
+    dayToV = data_rec['dayToV']
+    global ViewSet
+    global user
+    ViewSet = data_rec['ViewSet']
+    user['ViewSet']=ViewSet
+    fd=int(ViewSet['first_day'])
+    week_header, week_abbr, month_name, month_abbr, c = calendName(fd)
+    j=0
+
+    for i in c.itermonthdays4(year,month):
+        if (i[1]==month and i[2]==dayToV):
+            break
+        j+=1
+    #Set it to show 1 day
+    st=(j/1)*1
+    wekk=[]
+    for i in c.itermonthdays4(year,month):
+        if(st<=0 and st>-1):
+            hd=month_abbr[i[1]]+' '+str(i[2])
+            wekk.append({'week_head':hd,'id':date(i[0],i[1],i[2]).strftime('%Y-%m-%d'),'weekS':week_abbr[i[3]]+' '+hd})
+        st-=1
+    if wekk[0]['week_head'].split(' ')[0]==wekk[-1]['week_head'].split(' ')[0]:
+         head_cal_day=wekk[0]['week_head']+', '+wekk[-1]['id'].split('-')[0]
+    else:
+        head_cal_day=wekk[0]['week_head']+', '+wekk[-1]['id'].split('-')[0]
+    k=ViewSet['timeInterval']
+    t1= datetime(2020,2,2,0,0)
+    td=timedelta(minutes=ViewSet['timeInterval'])
+    con=sql.connect("mdn1.db")
+    con.row_factory =dict_factory
+    cur=con.cursor()
+    uname=session['username']
+    time_header=[]
+    time_event=[]
+    for i in range(0,1440,k):
+        ta=t1.strftime('%H:%M')
+        time_header.append(ta)
+        tb= (t1+td).strftime('%H:%M')
+        for j in wekk:
+            cur.execute("select event.eventname , groups.color, event.eventID, event.address as eventdescription \
+            from event natural join groups where groups.showG=1 and  event.date =? \
+            and event.username=? and ((event.start >= ? and event.start < ? ) or \
+            (event.endt > ? and  event.endt <= ?) or ( event.start <= ? and  ? < event.endt))\
+            order by event.start",(j['id'],uname,ta,tb,ta,tb,ta,ta))
+            time_event.append(cur.fetchall())
+        t1+=td
+    con.close()  
+    data = {'head_cal_day':head_cal_day,'wekk':wekk,'user':user,'time_header':time_header,'time_event':time_event,'groups':groups}
+    return {'data':data}
+
+
+
+
 @app.route('/week_calendar',methods = ['POST','GET'])
 @is_logged_in
 def week():
@@ -374,23 +433,25 @@ def edit_event():
         endt=jsd['endt']
         groupID =jsd['groupID']
         reminder=jsd['reminder']
-        if (jsd['st'] =='edit'):
-            event_id=int(jsd['ido'])
-            cur.execute('UPDATE event SET eventname=?, address=?, username=?, date=?, start=?, endt=?, group=? reminder=? WHERE eventID=?', (name, address, uname, date, start, endt, groupID, reminder, event_id))
-            scheduler.remove_job(str(event_id))
-        if (jsd['st']=='addEv'):
-            cur.execute('INSERT INTO event(eventname, address, username, date, start, endt, groupID, reminder)\VALUES (?,?,?,?,?,?,?,?)', (name, address, uname, date, start, endt, groupID, reminder))
-            email=user['email']
-            fname=user['fname']
-            subjects='PRO-Calendar You Add an event'
-            message_body= 'Hello' + fname + ',\n You add an event to your pro_calendar.\n The detail is:\n EVENT NAME:\t'\
-             + name + '\n ADDRESS:\t' + address + '\n Event Date:\t' + str(date) + '\n Start Time:\t' + str(start)\
-             + '\n End Time:\t' + str(endt) + '\n\n Pro-claenar team'
-            send_email(email,message_body,subjects)
-        if (jsd['st']=='delEv'):
-            a=int(jsd['ido'])
-            cur.execute('DELETE FROM event WHERE eventID = ?;',(a,))
-            scheduler.remove_job(str(a))
+    if (jsd['st'] =='edit'):
+        event_id=int(jsd['ido'])
+        cur.execute('UPDATE event SET eventname=?,address=?,username=?,date=?,\
+                    start=?,endt=?,group=? reminder=? WHERE eventID=?',(name,address,uname,date,start,endt,groupID,reminder,event_id))
+        scheduler.remove_job(str(event_id))        
+    if (jsd['st']=='addEv'):
+        cur.execute('INSERT INTO event(eventname,address,username,date,start,endt,groupID,reminder)\
+                    VALUES (?,?,?,?,?,?,?,?)',(name,address,uname,date,start,endt,groupID,reminder))
+        email=user['email']
+        fname=user['fname']
+        subjects='PRO-Calendar You Add an event'
+        message_body= 'Hello '+fname+', \n You add an event to your pro_calendar.\n The detail is:\n EVENT NAME:\t'\
+        +name+'\n ADDRESS:\t'+address+'\n Event Date:\t'+str(date)+'\n Start Time:\t'+str(start)\
+        +'\n End Time:\t'+str(endt)+'\n \n Pro-claenar team'
+        send_email(email,message_body,subjects)            
+    if (jsd['st']=='delEv'):
+        a=int(jsd['ido'])
+        cur.execute('DELETE FROM event WHERE eventID = ?;',(a,))
+        scheduler.remove_job(str(a))
     con.commit()
     con.close()
     con=sql.connect("mdn1.db")
@@ -457,7 +518,49 @@ def edit_group():
 
 
 
+@app.route('/changepassword', methods=['POST','GET'])
+def changepassword():
+    if request.method =='POST':
+        if request.get_json():
+            print("I am in if method=post")
+            uname=request.json['uname']
+            print('made to uname')
+            psw=request.json['psw']
+            iemail=request.json['iemail']
+            lname=request.json['lname']
+            fname=request.json['fname']
+            ViewSet={'first_day':6,'timeInterval':60,'viewLy':'month'}
+            ViewSet=json.dumps(ViewSet)
+            print(ViewSet)
+            print(uname +","+ psw +","+ fname +","+lname+","+iemail+","+ ViewSet)
+            try:
+                with sql.connect("mdn1.db") as con:
+                    cur=con.cursor()
+                    cur.execute('UPDATE users(password) VALUES (?) WHERE username=?', (psw, uname))
+                    con.commit()
+                    msg=''
+            except:
+                con.rollback()
+                msg = 'error in update'
+            finally:
+                con.close()
+                if msg=='' :
+                    subjects='Password has been updated '
+                    message_body=f"Hello {fname},\n Your password has been updated  "
+                    email_address=iemail
+                    send_email(iemail,message_body,subjects)
+                    return redirect('/dashboard')
+                else:
+                    print(msg)
+                    return render_template('account.html',msg = msg)
+        else:
+            return jsonify(request.json)
+    else:
+        return  
 
+
+
+        
 def add_sch(events, user):
     for event in events :
         ind= event['reminder']

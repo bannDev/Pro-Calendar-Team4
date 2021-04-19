@@ -7,109 +7,24 @@
 <!-- daily layout, 3 columns, 13 rows -->
 <div class="row calendar grid-container-2">
     <!-- row1 -->
-    <div class="day day-col-1" id="time">Time</div>
-    <div class="day day-col-2 last-col" id="day">Sunday</div>
+    <div class="day grid-col-1"></div>
+    <div class="day grid-col-2"></div>
+    <div class="day grid-col-3 last-col"></div>
     <!-- /row1 -->
-    <!--row2 -->
-    <div class="time day-col-1" id="00:00">00:00</div>
-    <div class="day-col-2 last-col" id="cell-1"></div>
-    <!-- /row2 -->
-    <!--row3 -->
-    <div class="time day-col-1" id="01:00">01:00</div>
-    <div class="day-col-2 last-col" id="cell-2"></div>
-    <!-- /row3 -->
-    <!--row4 -->
-    <div class="time day-col-1" id="02:00">02:00</div>
-    <div class="day-col-2 last-col" id="cell-3"></div>
-    <!-- /row4 -->
-    <!--row5 -->
-    <div class="time day-col-1" id="03:00">03:00</div>
-    <div class="day-col-2 last-col" id="cell-4"></div>
-    <!-- /row5 -->
-    <!--row6 -->
-    <div class="time day-col-1" id="04:00">04:00</div>
-    <div class="day-col-2 last-col" id="cell-5"></div>
-    <!-- /row6 -->
-    <!--row7 -->
-    <div class="time day-col-1" id="05:00">05:00</div>
-    <div class="day-col-2 last-col" id="cell-6"></div>
-    <!-- /row7 -->
-    <!--row8 -->
-    <div class="time day-col-1" id="06:00">06:00</div>
-    <div class="day-col-2 last-col" id="cell-7"></div>
-    <!-- /row8 -->
-    <!--row9 -->
-    <div class="time day-col-1" id="07:00">07:00</div>
-    <div class="day-col-2 last-col" id="cell-8"></div>
-    <!-- /row9 -->
-    <!--row10 -->
-    <div class="time day-col-1" id="08:00">08:00</div>
-    <div class="day-col-2 last-col" id="cell-9"></div>
-    <!-- /row10 -->
-    <!--row11 -->
-    <div class="time day-col-1" id="09:00">09:00</div>
-    <div class="day-col-2 last-col" id="cell-10"></div>
-    <!-- /row11 -->
-    <!--row12 -->
-    <div class="time day-col-1" id="10:00">10:00</div>
-    <div class="day-col-2 last-col" id="cell-11"></div>
-    <!-- /row12 -->
-    <!--row13 -->
-    <div class="time day-col-1" id="11:00">11:00</div>
-    <div class="day-col-2 last-col" id="cell-12"></div>
-    <!-- /row13 -->
-    <!--row14 -->
-    <div class="time day-col-1" id="12:00">12:00</div>
-    <div class="day-col-2 last-col" id="cell-13"></div>
-    <!-- /row14 -->
-    <!--row15 -->
-    <div class="time day-col-1" id="13:00">13:00</div>
-    <div class="day-col-2 last-col" id="cell-14"></div>
-    <!-- /row15 -->
-    <!--row16 -->
-    <div class="time day-col-1" id="14:00">14:00</div>
-    <div class="day-col-2 last-col" id="cell-15"></div>
-    <!-- /row16 -->
-    <!--row17 -->
-    <div class="time day-col-1" id="15:00">15:00</div>
-    <div class="day-col-2 last-col" id="cell-16"></div>
-    <!-- /row17 -->
-    <!--row18 -->
-    <div class="time day-col-1" id="16:00">16:00</div>
-    <div class="day-col-2 last-col" id="cell-17"></div>
-    <!-- /row18 -->
-    <!--row19 -->
-    <div class="time day-col-1" id="17:00">17:00</div>
-    <div class="day-col-2 last-col" id="cell-18"></div>
-    <!-- /row19 -->
-    <!--row20 -->
-    <div class="time day-col-1" id="18:00">18:00</div>
-    <div class="day-col-2 last-col" id="cell-19"></div>
-    <!-- /row20 -->
-    <!--row21 -->
-    <div class="time day-col-1" id="19:00">19:00</div>
-    <div class="day-col-2 last-col" id="cell-20"></div>
-    <!-- /row21 -->
-    <!--row22 -->
-    <div class="time day-col-1" id="20:00">20:00</div>
-    <div class="day-col-2 last-col" id="cell-21"></div>
-    <!-- /row22 -->
-    <!--row23 -->
-    <div class="time day-col-1" id="21:00">21:00</div>
-    <div class="day-col-2 last-col" id="cell-22"></div>
-    <!-- /row23 -->
-    <!--row24 -->
-    <div class="time day-col-1" id="22:00">22:00</div>
-    <div class="day-col-2 last-col" id="cell-23"></div>
-    <!-- /row24 -->
-    <!--row23 -->
-    <div class="time day-col-1 btm-row" id="23:00">23:00</div>
-    <div class="day-col-2 last-col btm-row" id="cell-24"></div>
-    <!-- /row23 -->            
- </div> <!-- /daily layout div -->
+    <div class="grid-col-1"></div>
+    <div class="grid-col-2"></div>
+    <div class="grid-col-3 last-col"></div>
+    <!-- /row1 -->
+
+    <!--/last row-->
+    <div class="grid-col-1 btm-row"></div>
+    <div class="grid-col-2 btm-row"></div>
+    <div class="grid-col-3 btm-row last-col"></div>
+    <!-- /last row -->          
+</div> <!-- /daily layout div -->
 {% endblock content %}
 
 {% block script %}
-<!-- link any .js file necessary -->
-<script src="#"></script>
+<!-- link daily.js -->
+<script src="{{url_for('static', filename = 'daily.js')}}"></script>
 {% endblock script %}
