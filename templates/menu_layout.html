@@ -15,7 +15,7 @@
             <input type="text" id="title" name="title"><br><br>
             <label for="date">Date:</label>
             <input type="date" id="date" name="date"><br><br>
-            <label for="start">START Time:</label>
+            <label for="start">Start Time:</label>
             <select id="start" name="start" value='00:00' onchange="changeEnd()">
                 <option ></option>
             </select> <br><br>
@@ -26,37 +26,45 @@
                 <option id=grList-0></option>
             </select><br><br>
             <label for="descr">Description:</label>
-            <textarea id="descr" name="descr" rows="5" cols="25"></textarea><br><br><br>
+            <textarea id="descr" name="descr"></textarea><br><br><br>
             <label for="reminder">Reminder:</label>
             <select id="reminder" name="reminder"  >
                 <option ></option>
             </select><br><br>
-            <input type="button" onclick="checkEvent()" value="Submit" id="addEventBtn">
+            <input class="sml-btn" type="button" onclick="checkEvent()" value="Submit" id="addEventBtn">
         </div>
        
         <!-- groups collapsible section -->
         <button type="button" class="collapsible">Groups</button>
         <div class="groups content" id=groupm>
             <div id='group-0'>
-                <input name=showG type="checkbox" onchange='changeshow(this)' >
-                <input  name=nameG type="text" size= 18 disabled='true' value="">
-                <input  name= colorG type=color  disabled='true'>
-                <button  name=delGroup onclick='delGroup(this)'>Del</button>
-                <button  name=edGroup onclick='editGroup(this)'>Edit</button>
+                <!--
+                <input name=showG type="checkbox" onchange='changeshow(this)'>-->
+                <label class="container">
+                    <input type="checkbox" checked="checked"  name="showG" onchange="changeshow(this)">
+                    <span class="checkmark"></span>
+                </label>
+                
+                <input name=nameG type="text" disabled='true' value="">
+                <input name= colorG type=color  disabled='true'>
+                <!-- -->
+                
+                <button class="sml-btn" name=delGroup onclick='delGroup(this)'>Del</button>
+                <button class="sml-btn" name=edGroup onclick='editGroup(this)'>Edit</button>
             </div>
             <div id='addGr'>
                 <input id="addG-Name"size=10 type="text" hidden value="">
                 <input id="addG-Color"size=1 type='color'hidden>
-                <button  id='addGroup' onclick='addGroup()'>New Group</button>
-                <button id='addG-Cancel' hidden onclick='adcGrCancel()'>*</button>
-                <span style="color:red;font:6px" hidden id='noGroup'>fill name box</span>
+                <button class="sml-btn"  id='addGroup' onclick='addGroup()'>New Group</button>
+                <button id='addG-Cancel' onclick='adcGrCancel()' hidden>Cancel</button>
+                <span style="color:red;font:6px" hidden id='noGroup'>Field is empty</span>
             </div>
         </div>
         
         <!-- settings collapsible section -->
         <button type="button" class="collapsible">Settings</button>
         <div class="settings content">
-            <!-- themes pop-up-->
+            <!-- themes -->
             <!-- <div>
                 <input type="radio" id="theme1" name="theme">
                 <label for="theme1">Theme 1</label>
@@ -65,19 +73,37 @@
                 <input type="radio" id="theme3" name="theme3">
                 <label for="theme3">Theme 3</label>
             </div> -->
-            <!-- start of week pop-up-->
+            <!-- start of week -->
             <div id='startWeek'>
-                <p>Start of week</p><br><br>
+                <p>Start of week</p>
                 <div class="set">
-                <input type="radio" id="startWeek5" name="first_day" Value=5>
-                <label for="startWeek5">Saturday</label><br><br>
-                <input type="radio" id="startWeek6" name="first_day" Value=6 >
-                <label for="startWeek6">Sunday</label><br>
-                <input type="radio" id="startWeek0" name="first_day" Value=0>
-                <label for="startWeek0">Monday</label>
+                    <!-- original start of week code
+                    <input type="radio" id="startWeek5" name="first_day" Value=5 >
+                    <label for="startWeek5">Saturday</label><br><br>
+                    
+                    <input type="radio" id="startWeek6" name="first_day" Value=6 >
+                    <label for="startWeek6">Sunday</label><br>
+                    
+                    <input type="radio" id="startWeek0" name="first_day" Value=0>
+                    <label for="startWeek0">Monday</label>-->
+                    
+                    <label class="container">Sunday
+                        <input type="radio" checked="checked" id="startWeek6" name="first_day" Value=6>
+                        <span class="radio-btn"></span>
+                    </label>
+                    
+                    <label class="container">Monday
+                        <input type="radio" id="startWeek0" name="first_day" Value=0>
+                        <span class="radio-btn"></span>
+                    </label>
+                    
+                    <label class="container">Saturday
+                        <input type="radio" id="startWeek5" name="first_day" Value=5>
+                        <span class="radio-btn"></span>
+                    </label>
                 </div>
             </div>
-            <!-- week numbers pop-up-->
+            <!-- week numbers -->
             <!-- <div>
                 <p>Show week numbers</p>
                 <input type="radio" id="num-wk-yes" name="num-wk-yes">
@@ -85,16 +111,34 @@
                 <input type="radio" id="num-wk-no" name="num-wk-no">
                 <label for="num-wk-no">No</label>
             </div> -->
-            <!-- time format pop-up-->
+            <!-- time format -->
             <div id='timeSlot'>
-                <p>Time Slot</p><br><br>
+                <p>Time Slot</p>
                 <div class="set">
-                <input type="radio" id="t15" name="timeInt"value=15>
-                <label for="t15">15 Min</label><br><br>
-                <input type="radio" id="t30" name="timeInt"value=30>
-                <label for="t30">30 Min</label><br><br>
-                <input type="radio" id="t60" name="timeInt" value=60>
-                <label for="t60">1 hour</label>
+                    <!-- original time format code
+                    <input type="radio" id="t15" name="timeInt"value=15>
+                    <label for="t15">15 Min</label><br><br>
+                    
+                    <input type="radio" id="t30" name="timeInt"value=30>
+                    <label for="t30">30 Min</label><br><br>
+                    
+                    <input type="radio" id="t60" name="timeInt" value=60>
+                    <label for="t60">1 hour</label>
+                    -->
+                    <label class="container">15 min
+                        <input type="radio" id="t15" name="timeInt" Value=15>
+                        <span class="radio-btn"></span>
+                    </label>
+                    
+                    <label class="container">30 min
+                        <input type="radio" id="t30" name="timeInt" Value=30>
+                        <span class="radio-btn"></span>
+                    </label>
+                    
+                    <label class="container">1 hour
+                        <input type="radio" checked="checked" id="t60" name="timeInt" Value=60>
+                        <span class="radio-btn"></span>
+                    </label>
                 </div>
             </div>
         </div>
@@ -103,7 +147,9 @@
         <button type="button" class="menu-button" id='account' onclick='viewCh(this)'>Account</button>
         
         <!-- logout -->
-        <button type="button" class="menu-button"><a class="link-button" href="/login">Logout</a></button> <!-- /logout -->
+        <!--<button type="button" class="menu-button">-->
+        <a class="link-button" href="/login">Logout</a>
+        <!--</button>--> <!-- /logout -->
 
     </div> <!-- /menu --> 
      
@@ -111,10 +157,10 @@
     <div class="col-9 views-nav">
         <div class="col-5"></div>
         <div class="col-7 views">
-            <button id='day' onclick='viewCh(this)'>Day</button>
-            <button id='week' onclick='viewCh(this)'>Week</button>
-            <button id='month' onclick='viewCh(this)'>Month</button>
-            <button id='year' onclick='viewCh(this)'>Year</button>
+            <button class="btn" id='day' onclick='viewCh(this)'>Day</button>
+            <button class="btn" id='week' onclick='viewCh(this)'>Week</button>
+            <button class="btn" id='month' onclick='viewCh(this)'>Month</button>
+            <button class="btn" id='year' onclick='viewCh(this)'>Year</button>
         </div>
     </div> <!-- /calendar view navigation -->
     
@@ -123,14 +169,14 @@
         <!-- calendar header -->
         <div class="row calendar-header">
             <div class="col-3 nav">
-                <button type="button"  onclick ='back()'>Back</button>
+                <button class="btn" type="button"  onclick ='back()'>Back</button>
             </div>
             <!-- display month name and year -->
-            <div class="col-5 month">
+            <div class="col-6 month">
                 <h1>April 15, 2021</h1>
             </div>
             <div class="col-3 nav">
-                <button type="button"  onclick ="forward()">Forward</button>
+                <button class="btn" type="button"  onclick ="forward()">Forward</button>
             </div>
         </div> <!-- /calendar header -->
 {% block content %}

@@ -1,15 +1,14 @@
 {% extends 'head_layout.html' %}
 
 {% block body %}   
-<body class="row body home-body">
-    <div class="col-4"></div>
-    <div class="home col-4">
+<body class="home-body">
+    <div class="home">
         <h1>ProCalendar</h1>
-        <div class="home-div">
-        <a href="/login" class="login">Login</a>
-        <a href="/register" class="register">Register</a>
-        </div>
     </div>
-    <div class="col-4"></div>
+    <div class="home">
+        <a class="home-btn" href="/login" class="login">Login</a>
+        <a class="home-btn" href="/register" class="register">Register</a>
+    </div>
+    
 </body>
 {% endblock body %}
