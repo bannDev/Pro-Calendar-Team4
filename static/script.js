@@ -52,8 +52,8 @@ function viewcom() {
     //add listiner for each day 
     $('[class|="grid-col"]').off()
     $('[class|="grid-col"]').click(function(){
-        //write proper code for here when click alert just for test   
-        alert($(this).attr('id'))
+        //Future Feature - write proper code for here when click alert not completed needs work! 
+        //$.post("/addevent-popup", {'data': myJSON}, function(resp) {})
     })
     // making option for time slots
     k=user.ViewSet.timeInterval
