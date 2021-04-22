@@ -1,10 +1,11 @@
-{% extends 'menu_layout.html' %}
+{% extends 'head_layout.html' %}
 
-{% block content %}
-<div class="account">
-
+{% block body %}
+<body class="home-body">
+    <div class="home">
         <h1>Account Details</h1>
-
+    </div>
+        
     <div class="account-details">
         <b><p class="account-heading">Username:</p></b>
         <p class="account-info">Mehrdad</p>
@@ -15,26 +16,32 @@
     </div>
     <div class="account-details">
         <b><p class="account-heading">Last Name:</p>
-        </b>        <p class="account-info">Dehmoubed</p>
+        </b>
+        <p class="account-info">Dehmoubed</p>
     </div>
     <div class="account-details">
         <b><p class="account-heading">Email:</p>
-        </b>    <p class="account-info">mdn197406@gmail.com</p>
+        </b>
+        <p class="account-info">mdn197406@gmail.com</p>
     </div>
     <div class="account-details">
         <b><p class="account-heading">Password:</p>
-        </b>       <p class="account-info">********</p>
+        </b>
+        <p class="account-info">********</p>
     </div>
     
     <!-- this button should change p tags with class="account-info" to input fields so the user can update their information in the database -->
     <div class="account-buttons">
-        <button type="button">Update account</button>
-        <button id='month' onclick='viewCh(this)'>Back to calendar</button>
+        <button class="home-btn" id='month' onclick='viewCh(this)'>Back to calendar</button>
+        <button  class="home-btn" type="button">Update account</button>
     </div> <!-- /account-buttons -->
-</div>
-{% endblock content %}
 
-{% block script %}
+<script>
+    user={{user|tojson}} 
+</script>
+
 <!-- link any .js file necessary -->
 <script src="#"></script>
-{% endblock script %}
+    
+</body>
+{% endblock body %}
