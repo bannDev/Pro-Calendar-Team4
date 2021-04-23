@@ -31,22 +31,10 @@
         </b>
         <p class="account-info">********</p>
     </div>
-
-    <!-- SAJ This can be moved and be its own page, I needed this here so I could test Change Password feature.  If I can't get it to work, We can delete the entire thing.  Needs Styling-->
-    <form class="updatepassword" name='updatepsw' onsubmit="return checkPassword()" action="{{url_for('changepassword')}}" method="POST">       
-        <label for="psw" hidden id="tpsw" ><b>Password:</b><br></label>
-        <input type="password" hidden id="vpsw" placeholder="Enter Password" name="psw" minlength="8" required><br><br>
-        <label for="repsw"  hidden id="trepsw"><b>Re-enter Password:</b><br></label>
-        <input type="password" hidden id="vrepsw" placeholder="Re-enter Password" name="repsw" minlength="8" required>
-        <span hidden id='notsame' style='font-size: 20px; color:red; padding: 5px'>Passwords do not match</span><br><br>
-        <label for="blanklines"  hidden id="lblank"><b></b><br><br></label>
-        {{msg}}
-    </form>
     
     <!-- this button should change p tags with class="account-info" to input fields so the user can update their information in the database -->
     <div class="account-buttons">
-        <button class="home-btn" id='month' onclick='viewCh(this)'>Back to calendar</button>
-        <button  class="home-btn" type="button">Update account</button>
+        <button class="home-btn" id='month' onclick='viewCh(this)'>Back to calendar</button> 
     </div> <!-- /account-buttons -->
 
 <script>

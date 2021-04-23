@@ -8,7 +8,8 @@ function view() {
         wekk=resp.data.wekk
         time_header=resp.data.time_header
         time_event=resp.data.time_event
-        $('.col-5.month').html('<h1>'+head_cal_week+'</h1>')
+        // BUG FIX 001: change '.col-5.month' to '.col-6.month' so calendar header displays dynamically
+        $('.col-6.month').html('<h1>'+head_cal_week+'</h1>')
         for (i in wekk) {
             $('.day').eq(i).html(wekk[i].weekS)          
         }

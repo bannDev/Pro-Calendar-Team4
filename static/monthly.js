@@ -8,8 +8,8 @@ function view() {
         week_header=resp.data.week_header
         day_header=resp.data.day_header
         day_event=resp.data.day_event
-        // targeting div that displays month and year in menu_layout.js 
-        $('.col-5.month').html('<h1>'+month_header+'</h1>')
+        // BUG FIX 001: change '.col-5.month' to '.col-6.month' so calendar header displays dynamically
+        $('.col-6.month').html('<h1>'+month_header+'</h1>')
         for (i in week_header) {
             // targeting divs that display Mon-Sun in monthly.js
             $('.day').eq(i).html(week_header[i])

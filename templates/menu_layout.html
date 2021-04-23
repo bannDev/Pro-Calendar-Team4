@@ -26,7 +26,7 @@
                 <option id=grList-0></option>
             </select><br><br>
             <label for="descr">Description:</label>
-            <textarea id="descr" name="descr"></textarea><br><br><br>
+            <textarea id="descr" name="descr" rows="5"></textarea><br><br>
             <label for="reminder">Reminder:</label>
             <select id="reminder" name="reminder"  >
                 <option ></option>
@@ -160,7 +160,8 @@
             <button class="btn" id='day' onclick='viewCh(this)'>Day</button>
             <button class="btn" id='week' onclick='viewCh(this)'>Week</button>
             <button class="btn" id='month' onclick='viewCh(this)'>Month</button>
-            <button class="btn" id='year' onclick='viewCh(this)'>Year</button>
+            <!-- BUG FIX 002: hide "Year" view button -->
+            <!--<button class="btn" id='year' onclick='viewCh(this)'>Year</button>-->
         </div>
     </div> <!-- /calendar view navigation -->
     
@@ -173,7 +174,7 @@
             </div>
             <!-- display month name and year -->
             <div class="col-6 month">
-                <h1>April 15, 2021</h1>
+                <!-- BUG FIX 001: delete hard-coded h1 so calendar header displays dynamically -->
             </div>
             <div class="col-3 nav">
                 <button class="btn" type="button"  onclick ="forward()">Forward</button>
