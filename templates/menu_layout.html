@@ -38,19 +38,27 @@
         <button type="button" class="collapsible">Groups</button>
         <div class="groups content" id=groupm>
             <div id='group-0'>
-                <!--
-                <input name=showG type="checkbox" onchange='changeshow(this)'>-->
+                <!--BUG FIX (SAJ-04/24/2021): Description: because <label class="container"> is removed these 3 <br> need to be here -->
+                <!-- BUG FIX (SAJ-04/24/2021): Description: Returned this original code section 
+                    Placed "class=container" within the <div> this so that the groups when checked 
+                    and unchecked toggle the events on the calendar on and off to match the group settings
+                    Please do not touch or remove any of these changes
+                    the onchange="changeshow(this)"  The "THIS" is important and can not be nested inside any:
+                    <label> or other any other <> 
+                    
                 <label class="container">
-                    <input type="checkbox" checked="checked"  name="showG" onchange="changeshow(this)">
+                    <input id= "sajCheckBox" type="checkbox" checked="checked"  name="showG" onchange="changeshow(document.getElementById('sajCheckBox'))">
                     <span class="checkmark"></span>
                 </label>
-                
+                -->
+                <input class="container" name=showG type="checkbox" onchange='changeshow(this)' >
+            
                 <input name=nameG type="text" disabled='true' value="">
                 <input name= colorG type=color  disabled='true'>
-                <!-- -->
+
                 
                 <button class="sml-btn" name=delGroup onclick='delGroup(this)'>Del</button>
-                <button class="sml-btn" name=edGroup onclick='editGroup(this)'>Edit</button>
+                <button class="sml-btn" name=edGroup onclick='editGroup(this)'>Edit</button><br> <!--BUG FIX (SAJ-04/24/2021): Description: added <br> in order to make stuff display NEW GROUP button correctly-->
             </div>
             <div id='addGr'>
                 <input id="addG-Name"size=10 type="text" hidden value="">
@@ -75,20 +83,25 @@
             </div> -->
             <!-- start of week -->
             <div id='startWeek'>
-                <p>Start of week</p>
-                <div class="set">
-                    <!-- original start of week code
-                    <input type="radio" id="startWeek5" name="first_day" Value=5 >
-                    <label for="startWeek5">Saturday</label><br><br>
+                <p>Start of week</p><br><br><br>
+                <!-- BUG FIX (SAJ-04/24/2021): Description: Returned this original code section 
+                    Placed "class=container" within each div and removed: <div class="set">
+                    this so that the settings are read correctly for the user table and display
+                    please do not touch or remove any of these changes -->
+                <!--<div class="set">--> 
+
+                    <input type="radio"  class="container" id="startWeek6" name="first_day" Value=6 >
+                    <label for="startWeek5"  class="container">Sunday</label><br><br>
                     
-                    <input type="radio" id="startWeek6" name="first_day" Value=6 >
-                    <label for="startWeek6">Sunday</label><br>
+                    <input type="radio"  class="container" id="startWeek0" name="first_day" Value=0 >
+                    <label for="startWeek6"  class="container">Monday</label><br><br>
                     
-                    <input type="radio" id="startWeek0" name="first_day" Value=0>
-                    <label for="startWeek0">Monday</label>-->
+                    <input type="radio"  class="container" id="startWeek5" name="first_day" Value=5>
+                    <label for="startWeek0"  class="container" >Saturday</label><br><br>
                     
+                    <!---BUG FIX (SAJ-04/24/2021): Description: This is the removed code:
                     <label class="container">Sunday
-                        <input type="radio" checked="checked" id="startWeek6" name="first_day" Value=6>
+                        <input type="radio" id="startWeek6" name="first_day" Value=6>
                         <span class="radio-btn"></span>
                     </label>
                     
@@ -101,7 +114,8 @@
                         <input type="radio" id="startWeek5" name="first_day" Value=5>
                         <span class="radio-btn"></span>
                     </label>
-                </div>
+                    -->
+                <!--</div>-->
             </div>
             <!-- week numbers -->
             <!-- <div>
@@ -113,18 +127,25 @@
             </div> -->
             <!-- time format -->
             <div id='timeSlot'>
-                <p>Time Slot</p>
-                <div class="set">
-                    <!-- original time format code
-                    <input type="radio" id="t15" name="timeInt"value=15>
-                    <label for="t15">15 Min</label><br><br>
+                <p>Time Slot</p><br><br><br>
+                    <!-- BUG FIX (SAJ-04/24/2021): Description: Returned this original code section 
+                    Placed "class=container" within each div and removed: <div class="set">
+                    this so that the settings are read correctly for the user table and display
+                    please do not touch or remove any of these changes -->
+               <!--<div class="set"> --> <!--BUG FIX (SAJ-04/24/2021): Description: commented this out so settings work -->
+
+                    <input type="radio"  class="container" id="t15" name="timeInt"value=15>
+                    <label for="t15"  class="container">15 Min</label><br><br>
                     
-                    <input type="radio" id="t30" name="timeInt"value=30>
-                    <label for="t30">30 Min</label><br><br>
+                    <input type="radio"  class="container" id="t30" name="timeInt"value=30>
+                    <label for="t30"  class="container">30 Min</label><br><br>
                     
-                    <input type="radio" id="t60" name="timeInt" value=60>
-                    <label for="t60">1 hour</label>
-                    -->
+                    <input type="radio"  class="container" id="t60" name="timeInt" value=60>
+                    <label for="t60"  class="container">1 hour</label><br><br>
+
+                    <!--BUG FIX (SAJ-04/24/2021): Description:The change made to style the settings section caused the radio
+                        buttons not to load the user's setttings stored in the user table.  I removed this code and modified the
+                        original code to place the class=container needed for styling 
                     <label class="container">15 min
                         <input type="radio" id="t15" name="timeInt" Value=15>
                         <span class="radio-btn"></span>
@@ -136,10 +157,10 @@
                     </label>
                     
                     <label class="container">1 hour
-                        <input type="radio" checked="checked" id="t60" name="timeInt" Value=60>
+                        <input type="radio" id="t60" name="timeInt" Value=60>
                         <span class="radio-btn"></span>
-                    </label>
-                </div>
+                    </label> -->
+                <!--</div>-->
             </div>
         </div>
         

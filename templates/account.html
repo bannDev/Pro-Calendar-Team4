@@ -32,17 +32,123 @@
         <p class="account-info">********</p>
     </div>
     
-    <!-- this button should change p tags with class="account-info" to input fields so the user can update their information in the database -->
+
+    <!-- SAJ 4/23/2021 Feature update: This <form class= "updatepassword" is to Change Password: This code displays these elements and immediately the script code below hides some of these elements-->
+    <!-- the elements that will be hidden are input elements that will only show up when the user presse Change Password -->
+    <form class="account-details" name='updatepsw' onsubmit="return checkPassword()" action="{{url_for('changepassword')}}" method="POST">       
+        <label for="psw" hidden id="tpsw" ><b>Password:</b><br></label>
+        <input type="password" hidden id="vpsw" placeholder="Enter Password" name="psw" minlength="8" required><br><br>
+	    <label for="repsw"  hidden id="trepsw"><b>Re-enter Password:</b><br></label>
+        <input type="password" hidden id="vrepsw" placeholder="Re-enter Password" name="repsw" minlength="8" required>
+        {{msg}}
+    </form>
+
+   <!-- SAJ 4/23/2021 Feature update: Added "Change Password" and "Save New Password" buttons to work with the Change Password Form in this page -->
     <div class="account-buttons">
-        <button class="home-btn" id='month' onclick='viewCh(this)'>Back to calendar</button> 
+        <!---SAJ- Added a savepassword button, added id so I could turn them off and on -->
+        <button class="home-btn" type ="button" onclick="savepassword()" id="btn_save_change">Save New Password</button>        
+        <button class="home-btn" type ="button" onclick="changepassword()" id="btn_change_psw">Change Password</button>
+        <button class="home-btn" id='month' onclick='viewCh(this)' id="btn_goback">Back to calendar</button>
     </div> <!-- /account-buttons -->
-
+{% block script %}
+<!-- Most of this can be deleted if I do not get the Change Password to work.  I placed the javascript in here because I couldn't get it to work otherwise.  -->
+<script src="{{url_for('static', filename = 'monthly.js')}}"></script>
+<script src="{{url_for('static', filename = 'script.js')}}"></script>
 <script>
-    user={{user|tojson}} 
-</script>
 
-<!-- link any .js file necessary -->
-<script src="#"></script>
+    var valid_password
+
+    //Feed the information displayed on the page with the user information for the current user
+    user={{user|tojson}} ;
+
+    document.getElementsByClassName("account-details").innerHTML=user;
+    document.getElementById("username").innerHTML=user.username
+    document.getElementById("firstname").innerHTML=user.fname
+    document.getElementById("lastname").innerHTML=user.lname
+    document.getElementById("useremail").innerHTML=user.email
+
+
+    hideChangePwdForm()
+
+
+    function hideChangePwdForm(){
+        //Hide the form to change the password 
+        $("#tpsw").hide("slow").css({"font-family": "Arial, Helvetica, sans-serif", "font-size": "20px"})
+        $("#vpsw").hide("slow").css({"font-family": "Arial, Helvetica, sans-serif", "font-size": "20px"})
+        $("#trepsw").hide("slow").css({"font-family": "Arial, Helvetica, sans-serif", "font-size": "20px", "Padding": "15px"})
+        $("#vrepsw").hide("slow").css({"font-family": "Arial, Helvetica, sans-serif", "font-size": "20px", "Padding": "15px"})
+        $("#lblank").hide("slow").css({"font-family": "Arial, Helvetica, sans-serif", "font-size": "20px", "Padding": "15px"}).append("<br><br><br>") 
+        //Also hide all the buttons associated with selecting changing password
+        $("#btn_save_change").hide()
+    }
+
+
+    function changepassword(){ 
+
+        prepareChangePwdForm()
+        showChangePwdForm()
+        //check if password was typed and retyped correctly
+        $(document).ready(function(){
+            $('[name=repsw]').blur(function(){checkEqu(this)})
+
+        })
+    }
+
+    function prepareChangePwdForm(){
+        //Hide these items because user is changing the password
+        ///toggleOffOn(document.getElementById("userpassword"))
+        ///toggleOffOn(document.getElementById("titlepassword")
+        $("#userpassword").hide()
+        $("#titlepassword").hide()
+        //Hide these buttons because user is changing the password
+        $("#btn_goback").hide()
+        $("#btn_change_psw").hide()  
+    }
+
+    function showChangePwdForm(){
+        //Show change of password labels and input
+        $("#tpsw").show()
+        $("#vpsw").show()
+        $("#trepsw").show()
+        $("#vrepsw").show()
+        //Show the save change button
+        $("#btn_save_change").show()
+    }
+
+    function toggleOffOn(elementIdName){
+        if (elementIdName.style.display == "none"){
+            elementIdName.style.display = "block";
+        }else {
+            elementIdName.style.display = "none";
+        }
+    }
+
+    function checkEqu(e){
+        var m= document.getElementsByName('psw')[0].value
+        valid_password = (e.value == m)
+        if(e.value != m){$('#notsame').show("slow") }
+        else{$('#notsame').hide("slow")} 
+
+        if (!(valid_password)) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    function savepassword(){
+        //newpassword=$("#vpsw").val();  //delete ths line per Mehrdad
+        //var send= {"user":user, "psw":newpassword}
+        user.password=$('[name=psw]').val()
+
+        setUser()
+
+        hideChangePwdForm()
+    }
+    
+
+</script>
+{% endblock script %}
     
 </body>
 {% endblock body %}
