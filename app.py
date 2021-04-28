@@ -159,7 +159,7 @@ def dashboard():
     con=sql.connect("mdn1.db")
     con.row_factory =dict_factory
     cur=con.cursor()
-    cur.execute("select username , email, lname, fname, ViewSet from users where username = ?",(session['username'],))
+    cur.execute("select * from users where username = ?",(session['username'],))
     global user 
     global groups
     user=cur.fetchall()[0]
@@ -451,7 +451,7 @@ def edit_event():
     if (jsd['st']=='delEv'):
         a=int(jsd['ido'])
         cur.execute('DELETE FROM event WHERE eventID = ?;',(a,))
-        scheduler.remove_job(str(a))
+        #scheduler.remove_job(str(a))
     con.commit()
     con.close()
     con=sql.connect("mdn1.db")
@@ -502,9 +502,10 @@ def edit_group():
         ViewSet=user['ViewSet']
         ViewSet=json.dumps(ViewSet)
         uname=user['username']
+        password=user['password']
         print(ViewSet)
         print(uname)
-        cur.execute('UPDATE users SET lname=?,fname=?, ViewSet=? WHERE username=?',(lname,fname,ViewSet,uname))
+        cur.execute('UPDATE users SET password=?,lname=?,fname=?, ViewSet=? WHERE username=?',(password,lname,fname,ViewSet,uname))
     con.commit()
     con.close()
     con=sql.connect("mdn1.db")

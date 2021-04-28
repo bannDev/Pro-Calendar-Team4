@@ -40,8 +40,8 @@ function view() {
                     for (l = 0; l < time_event[i].length; l++ ) {
                         if (time_event[i].length >0) {
                             mulitpleOverBooked =time_event[i].length 
-                            appointment.append("<span style='background-color:" + time_event[parseInt(i)][0].color +
-                            "'id=" + time_event[i][0].eventID + ">" +time_event[parseInt(i)][0].eventname + "<br></span>")
+                            appointment.append("<div class='event' style='background-color:" + time_event[parseInt(i)][0].color +
+                            "'id=" + time_event[i][0].eventID + ">" +time_event[parseInt(i)][0].eventname + "<br></div>")
                             description.append("<span style='background-color:" + time_event[parseInt(i)][0].color +
                             "'id=" + time_event[i][0].eventID + ">" + time_event[parseInt(i)][0].eventdescription +"<br></span>")
                         }

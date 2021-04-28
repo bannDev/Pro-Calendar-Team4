@@ -26,6 +26,7 @@ var year=today.getFullYear();
 $(document).ready(function(){
     dayToV=today.getDate();
     view();
+    
 })
   
 
@@ -55,6 +56,15 @@ function viewcom() {
         //Future Feature - write proper code for here when click alert not completed needs work! 
         //$.post("/addevent-popup", {'data': myJSON}, function(resp) {})
     })
+
+    $('[class="event"]').click(function(){ ido=this.id
+        a=confirm("Are sure , Do you want to delete "+$(this).text()+" event")
+        if (a){var send={'st':'delEv','ido':ido}
+        myJSON = JSON.stringify(send);
+        $.post("/edit_event", {'id': myJSON}, function() {        
+            alert('deleted')
+        view()})
+    }})
     // making option for time slots
     k=user.ViewSet.timeInterval
     $('#start').html('<option>00:00</option>'); et1=$('#start').children().clone();

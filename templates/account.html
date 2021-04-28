@@ -35,12 +35,12 @@
 
     <!-- SAJ 4/23/2021 Feature update: This <form class= "updatepassword" is to Change Password: This code displays these elements and immediately the script code below hides some of these elements-->
     <!-- the elements that will be hidden are input elements that will only show up when the user presse Change Password -->
-    <form class="account-details" name='updatepsw' onsubmit="return checkPassword()" action="{{url_for('changepassword')}}" method="POST">       
+    <form class="account-details" name='updatepsw' >       
         <label for="psw" hidden id="tpsw" ><b>Password:</b><br></label>
         <input type="password" hidden id="vpsw" placeholder="Enter Password" name="psw" minlength="8" required><br><br>
 	    <label for="repsw"  hidden id="trepsw"><b>Re-enter Password:</b><br></label>
         <input type="password" hidden id="vrepsw" placeholder="Re-enter Password" name="repsw" minlength="8" required>
-        {{msg}}
+        <a id='Error'>Something is wrong</a>
     </form>
 
    <!-- SAJ 4/23/2021 Feature update: Added "Change Password" and "Save New Password" buttons to work with the Change Password Form in this page -->
@@ -66,7 +66,7 @@
     document.getElementById("firstname").innerHTML=user.fname
     document.getElementById("lastname").innerHTML=user.lname
     document.getElementById("useremail").innerHTML=user.email
-
+    $('#Error').hide()
 
     hideChangePwdForm()
 
@@ -77,7 +77,7 @@
         $("#vpsw").hide("slow").css({"font-family": "Arial, Helvetica, sans-serif", "font-size": "20px"})
         $("#trepsw").hide("slow").css({"font-family": "Arial, Helvetica, sans-serif", "font-size": "20px", "Padding": "15px"})
         $("#vrepsw").hide("slow").css({"font-family": "Arial, Helvetica, sans-serif", "font-size": "20px", "Padding": "15px"})
-        $("#lblank").hide("slow").css({"font-family": "Arial, Helvetica, sans-serif", "font-size": "20px", "Padding": "15px"}).append("<br><br><br>") 
+        //$("#lblank").hide("slow").css({"font-family": "Arial, Helvetica, sans-serif", "font-size": "20px", "Padding": "15px"}).append("<br><br><br>") 
         //Also hide all the buttons associated with selecting changing password
         $("#btn_save_change").hide()
     }
@@ -88,10 +88,7 @@
         prepareChangePwdForm()
         showChangePwdForm()
         //check if password was typed and retyped correctly
-        $(document).ready(function(){
-            $('[name=repsw]').blur(function(){checkEqu(this)})
-
-        })
+       
     }
 
     function prepareChangePwdForm(){
@@ -107,6 +104,7 @@
 
     function showChangePwdForm(){
         //Show change of password labels and input
+       
         $("#tpsw").show()
         $("#vpsw").show()
         $("#trepsw").show()
@@ -123,27 +121,23 @@
         }
     }
 
-    function checkEqu(e){
-        var m= document.getElementsByName('psw')[0].value
-        valid_password = (e.value == m)
-        if(e.value != m){$('#notsame').show("slow") }
-        else{$('#notsame').hide("slow")} 
-
-        if (!(valid_password)) {
-            return false;
-        }else{
-            return true;
-        }
+    function invalid(){
+        a=($('#vpsw').val()==$('#vrepsw').val()) & ($('#vpsw').val().length>7)
+        if (a) {$('#Error').hide();return false}
+        $('#Error').show()
+        return true
     }
 
     function savepassword(){
-        //newpassword=$("#vpsw").val();  //delete ths line per Mehrdad
-        //var send= {"user":user, "psw":newpassword}
+        if (invalid()){return}
+        else{
+        
         user.password=$('[name=psw]').val()
 
         setUser()
 
         hideChangePwdForm()
+        }
     }
     
 
