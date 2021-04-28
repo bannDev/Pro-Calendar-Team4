@@ -1,6 +1,14 @@
-/* 12 column responsive layout */
+/* variables */
+:root {
+    --light: whitesmoke;
+    --dark: darkgray;
+    --color: darkorange;
+}
+
+/* 12 column responsive layout ----- */
 * {
     box-sizing: border-box;
+    float: left;
 }
 
 .col-1 {width: 8.33%;}
@@ -29,11 +37,45 @@
 
 .row {
 }
+/* --------------------------------- *//* 12 column responsive layout ----- */
+* {
+    box-sizing: border-box;
+    float: left;
+}
 
-/* grid layout module */
+.col-1 {width: 8.33%;}
+.col-2 {width: 16.66%;}
+.col-3 {width: 25%;}
+.col-4 {width: 33.33%;}
+.col-5 {width: 41.66%;}
+.col-6 {width: 50%;}
+.col-7 {width: 58.33%;}
+.col-8 {width: 66.66%;}
+.col-9 {width: 75%;}
+.col-10 {width: 83.33%;}
+.col-11 {width: 91.66%;}
+.col-12 {width: 100%;}
+
+[class*="col-"] {
+    float: left;
+    padding: 15px;
+}
+
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.row {
+}
+/* --------------------------------- */
+
+/* grid layout module -------------- */
 .grid-container-1 {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
+    height: 100%;
 }
 
 .grid-container-2 {
@@ -42,9 +84,9 @@
 }
 
 [class*="grid-col-"] {
-    border-left: 1px solid black;
-    border-top: 1px solid black;
-    padding: 5px;
+    border-left: 1px solid var(--dark);
+    border-top: 1px solid var(--dark);
+    padding: 1px;
 }
 
 .grid-col-1 {
@@ -88,8 +130,8 @@
 }
 
 [class*="day-col-"] {
-    border-left: 1px solid black;
-    border-top: 1px solid black;
+    border-left: 1px solid var(--dark);
+    border-top: 1px solid var(--dark);
     padding: 5px;
 }
 
@@ -100,7 +142,7 @@
 
 .day-col-2 {
     grid-column-start: 2;
-    grid-column-end: 7;
+    grid-column-end: 9;
 }
 
 .day-col-3 {
@@ -110,8 +152,8 @@
 }
 
 [class*="year-col-"] {
-    border-left: 1px solid black;
-    border-top: 1px solid black;
+    border-left: 1px solid var(--dark);
+    border-top: 1px solid var(--dark);
     padding: 5px;
 }
 
@@ -133,85 +175,89 @@
 .year-col-4 {
     grid-column-start: 7;
     grid-column-end: 9;
-    border-right: 1px solid black;
+    border-right: 1px solid var(--dark);
 }
 
 .btm-row {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--dark);
 }
 
 .last-col {
-    border-right: 1px solid black;
+    border-right: 1px solid var(--dark);
 }
+/* --------------------------------- */
 
-/* collapsible sidepanel menu */
-.sidepanel {
-    height: 100%;
-    width: 0; /* 0 width - change this with JavaScript */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Stay on top */
-    top: 0;
-    left: 0;
-    background-color: #111; /* Black*/
-    overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 60px; /* Place content 60px from the top */
-    transition: 0.5s; /* 0.5 second transition effect to slide in the sidepanel */
-}
-
-/* sidepanel links */
-.sidepanel a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
-}
-
-.sidepanel a:hover {
-    color: #f1f1f1;
-}
-
-/* close button */
-.sidepanel .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
-}
-
-/* toggle sidepanel button */
-.openbtn {
-    font-size: 20px;
-    cursor: pointer;
-    background-color: #111;
-    color: white;
-    padding: 10px 15px;
+/* buttons */
+.btn, .home-btn {
+    background-color: var(--color);
     border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    border-radius: 0px;
 }
 
-.openbtn:hover {
-    background-color: #444;
+.btn {
+    float: right;
 }
 
-/* collapsible menu sections */
+.btn:hover {
+    background-color: var(--light);
+    color: var(--dark);
+}
+
+.home-btn:hover {
+    background-color: var(--dark);
+    color: white;
+}
+
+.sml-btn {
+    background-color: var(--dark);
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+    border-radius: 0px;
+    float: right;
+}
+
+.sml-btn:hover {
+    background-color: var(--color);
+    color: white;
+}
+
+.menu > a:link {
+    text-decoration: none;
+}
+
 /* collapse trigger button */
-.collapsible {
-    background-color: #eee;
-    color: #444;
+.collapsible, .menu-button, .link-button:link, .link-button:visited {
+    background-color: var(--dark);
+    color: white;
     cursor: pointer;
     padding: 18px;
     width: 100%;
     border: none;
     text-align: left;
     outline: none;
-    font-size: 15px;
+    font-size: 20px;
 }
 
-/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+/* add .active with JS */
 .active, .collapsible:hover {
-    background-color: #ccc;
+    background-color: var(--color);
+    color: white;
+}
+
+.menu-button:hover, .link-button:hover {
+    background-color: var(--color);
+    color: white;
 }
 
 /* collapsible content. Note: hidden by default */
@@ -219,54 +265,190 @@
     padding: 0 18px;
     display: none;
     overflow: hidden;
-    background-color: #f1f1f1;
+    background-color: var(--light);
+    width: 100%;
 }
 
-/* main */
-.main {}
+/* whole document styling */
+html {
+    height: 100%;
+    width: 100%;
+}
 
-.calendar-header {}
+body {
+    height: 100%;
+    width: 99%;
+    font-family: Helvetica, Arial, sans-serif;
+}
 
-.month {}
+h1 {
+    color: var(--color);
+    margin: 0px;
+}
 
-.nav {
-    text-align: right;
+h2 {
+    color: white;
+}
+
+form, .month, .nav {
+    display: inline-block;
+}
+
+label {
+}
+
+input {
+    border: none;
+    padding: 5px;
+    border-radius: 0px;
+}
+
+input[type=button], #addGroup {
+    margin-top: 10px;
+}
+
+#group-0 > input {
+}
+
+textarea {
+    margin-bottom: 10px;
+    resize: none;
+    border: none;
+    padding: 5px;
+    width: 94%;
+}
+
+select {
+    border: none;
+    padding: 5px;
+}
+
+label, .account-buttons > button, .home-div > a, .register > button {
+    margin-right: 10px;
+}
+
+.account-heading, .account-info {
+    font-size: 20px;
+}
+
+.account-details, .account-buttons, .settings, .calendar-header {
+    width: 100%;
+}
+
+.menu, .nav, .views, .views-nav {
+    padding: 0px;
+}
+
+.main {
+    padding: 5px;
+}
+
+/* account */
+.account-info {
+    text-indent: 15px;
+    color: var(--dark);
+}
+
+.account-details, .account-buttons {
+}
+
+/* home pages */
+.home-body, .register, .login {
+    background-color: var(--light);
+}
+
+.home, .account-details, .account-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.home {
+    margin-top: 50px;
+    margin-bottom: 0px;
+}
+
+/* navigation */
+.add-event, .groups, .settings {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.menu {
+    background-color: var(--dark);
+    height: 100%;
+}
+
+.menu-header {
+    padding: 20px;
 }
 
 .views {
     text-align: right;
 }
 
-.calendar {}
+.calendar-header {
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
 
-.day {}
+/* calendar views */
+.calendar {
+    height: 100%;
+    width: 100%;
+}
+
+.month, .nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.day {
+    color: var(--color);
+    text-align: center;
+    font-size: 15px;
+    padding: 5px;
+    background-color: var(--light);
+}
 
 .date {
     text-align: right;
+    font-size: 12px;
+    padding-top: 5px;
+    padding-right: 5px;
+    margin-bottom: 5px;
+    height: 20px;
+    width: 100%;
 }
 
 .event-area {
-    height: 50px;
+    height: 60px ;
+    overflow: hidden;
+    width: 100%;
 }
 
-fieldset {
-    background: lightgray;
-    height: 250px;
-    width: 250px;
+.time {
+    text-align: center;
+    font-size: 15px;
 }
 
-form {
-    display: inline-block;
+/* events */
+.event {
+    color: white;
+    width: 100%;
+    max-height: 16px;
+    overflow: hidden;
+    padding: 1px;
+    margin-bottom: -16px;
+    text-indent: 5px;
+    font-size: 12px;
 }
 
-.details {
-    background: lightgray;
-    height: 250px;
-    width: 250px;
-    padding: 5px 15px 15px 15px;
-}
-
-/* modals */
+/* modals ---------------------------*/
 /* background */
 .modal {
     display: none; /* Hidden by default */
@@ -282,7 +464,7 @@ form {
 }
 
 /* modal content */
-.modal-content, .add-event-modal {
+.modal-content {
     background-color: #fefefe;
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
@@ -304,3 +486,92 @@ form {
     text-decoration: none;
     cursor: pointer;
 }
+/* --------------------------------- */
+
+#startWeek > p, #timeSlot > p, .add-event > label {
+    font-size: 15px;
+}
+
+/* --------------------------------- */
+/* checkboxes & radio buttons ------ */
+/* Customize the label (the container) */
+.container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 12px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio or checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom radio or checkbox */
+.radio-btn, .checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 15px;
+  width: 15px;
+  background-color: white;
+}
+
+.radio-btn {
+  border-radius: 50%;
+}
+
+/* On mouse-over, add a background color */
+.container:hover input ~ .radio-btn, .container:hover input ~ .checkmark {
+  background-color: var(--dark);
+}
+
+/* When the button is checked, add a background */
+.container input:checked ~ .radio-btn, .container input:checked ~ .checkmark {
+  background-color: var(--color);
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.radio-btn:after, .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.container input:checked ~ .radio-btn:after, .container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.container .radio-btn:after {
+  top: 3px;
+  left: 3px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: white;
+}
+
+.container .checkmark:after {
+    left: 4px;
+    top: 1px;
+    width: 3px;
+    height: 7px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+/* --------------------------------- */

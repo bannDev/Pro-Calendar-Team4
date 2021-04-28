@@ -1,26 +1,21 @@
-<!DOCTYPE html>
-<html>
-    <body>
-        <form action="{{url_for('logi')}}"  method="POST">
-            <label for="uname"><b>Username</b></label><br>
+{% extends 'head_layout.html' %}
+
+{% block body %}
+<body class="home-body">
+    <div class="home">
+        <form class="login" action="{{url_for('logi')}}"  method="POST">
+            <label for="uname"><b>Username</b></label>
             <input type="varchar" placeholder="Enter Username" name="uname" minlegth='5' required onblur="check1()"><br><br>
-             
 
-            <label for="psw"><b>Password</b></label><br>
+            <label for="psw"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" name="psw" minlength="8" required><br><br>
-                     
-           
 
-            <input type="submit" value="LOG IN"/></br>
-            <h4>{{msg}}</h4>
-           
+            <input class="home-btn" type="submit" value="Log In"/><br><br>
+            {{msg}}
         </form>
-        <h3><a href="/register">register</a></h3>
-    </body>
-    <script>
-        function check1(){
-            
-
-        }
-    </script>
-</html>
+    </div>
+    <div class="home">
+        <a class="sml-btn" href="/register">Register</a>
+    </div>
+</body>
+{% endblock body %}

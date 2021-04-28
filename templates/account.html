@@ -1,174 +1,148 @@
-<!DOCTYPE html>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<html>
-    <body>
-        <h3>Hi {{user[0]['fname']}}</h3> <h5><a href="/logout">Edit account </a><br><a href="/logout"> Logout</a></h5> 
-        <p hidden>There is'nt any events</p> 
-        <fieldset> <legend ><h2>Events:</h2></legend>
-            <table >
-                
-                <thead >
-                    <td><h4>Event name</h4></td>
-                    <td><h4>Adress</h4></td>
-                    <td><h4>Date</h4></td> 
-                    <td><h4>start time</h4></td>
-                    <td><h4>End time</h4></td>
-                    <td><h4>Color</h4></td>
-                    <td><h4></h4></td>
-                    
-                </thead>
-                {% for event in events %}
-                <tr  id='t{{event["eventID"]}}'>
-                
-                    <td><h3 ><input type="text"  value='{{event['eventname']}}' disabled id='1a{{event["eventID"]}}'></input> </h3></td>
-                    <td><h3 ><input type="text"  value='{{event['address']}}' disabled id='2a{{event["eventID"]}}'></input> </h3></td>
-                    <td><h3 ><input type="date"  value='{{event['date']}}' disabled id='3a{{event["eventID"]}}'></input> </h3></td>
-                    <td><h3 ><input type="time"  value='{{event['start']}}' disabled id='4a{{event["eventID"]}}'></input> </h3></td>
-                    <td><h3 ><input type="time"  value='{{event['end']}}' disabled id='5a{{event["eventID"]}}'></input> </h3></td>
-                    <td><h3 ><input type="color"  value='{{event['color']}}' disabled id='6a{{event["eventID"]}}'></input> </h3></td>
-                                       
-                    <td><h3>
-                        <button name='del' id='d{{event["eventID"]}}' style="color:red" >del </button>     
-                        <button name==edit id='e{{event["eventID"]}}' style="color:blue">edit</button> 
-                    </h3></td>
-                </tr >  
-                    {% endfor %}
-                    
-                <tr>             
-                    <td><h3 ><input type="text"   id='ename' hidden></input> </h3></td>
-                    <td><h3 ><input type="text"   id='address' hidden></input> </h3></td>
-                    <td><h3 ><input type="date"   id='date' hidden></input> </h3></td>
-                    <td><h3 ><input type="time"   id='start'hidden></input> </h3></td>
-                    <td><h3 ><input type="time"   id='end' hidden></input> </h3></td>
-                    <td><h3 ><input type="color"   id='color' hidden></input> </h3></td>
-                <td><h3>
-                    <button   type="submit" id="addevent" style="color:green" >ADD Event</button>     
-                   
-                </h3></td></tr>
-            </table><br><br>
-           
-                 
-        </fieldset>
-         
-    </body>
-    <script>
-        var events=[]
-        {%for event in events %}
-          events.push({{event|tojson}}) 
-        {% endfor %}
-          
-        alert(events[0].eventname)
+{% extends 'head_layout.html' %}
 
-
+{% block body %}
+<body class="home-body">
+    <div class="home">
+        <h1>Account Details</h1>
+    </div>
         
-        {%if events|length<1 %}
-            $('thead').hide()
-            $('p').show()
-            
-        {% endif%}
-
-
-        
-        function reloa(){window.location.reload();}
-        
-        $(document).ready(function(){
-            $('button').click(function(){
-                var a =$(this).prop('id');
-                
-                if ($(this).html()=='ADD Event'){
-                    $('thead').show();
-                    $('button').hide();
-                    $(this).show();
-                    $(this).html('done')
-                    $('#ename').show();
-                    $('#address').show();
-                    $('#date').show();
-                    $('#start').show();
-                    $('#end').show();
-                    $('#color').show();
-                    var change =true;
-                }
-                if (a=='addevent' && $(this).html()=='done' && !change ){
-                   
-                    a1=$("#ename").val();
-                    a2=$("#address").val();
-                    a3=$("#date").val();
-                    a4=$("#start").val();
-                    a5=$("#end").val();
-                    a6=$("#color").val();
-                    
-                    if( a1.length>2 & a2.length>2 &isNaN(a3.valueOf())&isNaN(a4.valueOf())& 
-                    isNaN(a5.valueOf())& isNaN(a5.valueOf())){ //check validation
-                        // write more js code to make sure it does not overlap with other events
-                        change=false;
-                        var send={st:'add',name:a1,address:a2,date:a3,start:a4,end:a5,color:a6}
-                        //alert(send.st);
-                        myJSON = JSON.stringify(send);
-                        $.post( "/edit_event", {id: myJSON});
-                        setTimeout(reloa, 2000);
-                    }
-                    else{alert("some field didn't assign")}
-                    
-                }   
-                //delete
-                if (a.indexOf('d')== 0){
-                    var send={st:'del',ido:a.slice(1,)}
-                    //alert(send.ido);
-                    myJSON = JSON.stringify(send);
-                    $.post( "/edit_event", {id: myJSON});
-                    setTimeout(reloa, 2000);
-                    
-                }
-
-
-                
-
-                //edit
-                if  ($(this).html() == 'edit' ){
-                    $('button').hide();
-                    $(this).show();
-                    $(this).html('done')                   
-                    $("#1a"+a.slice(1,)).removeAttr('disabled');
-                    $("#2a"+a.slice(1,)).removeAttr('disabled');
-                    $("#3a"+a.slice(1,)).removeAttr('disabled');
-                    $("#4a"+a.slice(1,)).removeAttr('disabled');
-                    $("#5a"+a.slice(1,)).removeAttr('disabled');
-                    $("#6a"+a.slice(1,)).removeAttr('disabled');
-                    var change =true;
-                }
-                
-                
-                if (a.indexOf('e')==0 && $(this).html()=='done' && !change ){                    
-                    change = false;
-                    $(this).html('edit')
-                    $('button').show();
-                    a0=a.slice(1,);
-                    a1=$("#1a"+a.slice(1,)).val();
-                    a2=$("#2a"+a.slice(1,)).val();
-                    a3=$("#3a"+a.slice(1,)).val();
-                    a4=$("#4a"+a.slice(1,)).val();
-                    a5=$("#5a"+a.slice(1,)).val();
-                    a6=$("#6a"+a.slice(1,)).val();
-                    var send={st:'edit',ido:a0,name:a1,address:a2,date:a3,start:a4,end:a5,color:a6}
-                    //alert(send.ido);
-                    myJSON = JSON.stringify(send);
-                    $.post( "/edit_event", {id: myJSON});
-
-                    
-                    $("#1a"+a.slice(1,)).attr('disabled','disabled');
-                    $("#2a"+a.slice(1,)).attr('disabled','disabled');
-                    $("#3a"+a.slice(1,)).attr('disabled','disabled');
-                    $("#4a"+a.slice(1,)).attr('disabled','disabled');
-                    $("#5a"+a.slice(1,)).attr('disabled','disabled');
-                    $("#6a"+a.slice(1,)).attr('disabled','disabled');
-
-                    setTimeout(reloa, 2000);
-                }    
-
-                
-                
-            })})
-        
+    <div class="account-details">
+        <b><p class="account-heading">Username:</p></b>
+        <!--SAJ: Update to feed live data to <p> class needs: a) to be empty string can't be null b) have id-->
+        <p class="account-info" id="username" >" "</p> 
+    </div>
+    <div class="account-details">
+        <b><p class="account-heading">First Name:</p></b>
+        <!--SAJ: Update to feed live data to <p> class needs: a) to be empty string can't be null b) have id-->
+        <p class="account-info" id="firstname">" "</p>
+    </div>
+    <div class="account-details">
+        <b><p class="account-heading">Last Name:</p></b>
+        <!--SAJ: Update to feed live data to <p> class needs: a) to be empty string can't be null b) have id-->
+        <p class="account-info" id="lastname">" "</p>
+    </div>
+    <div class="account-details">
+        <b><p class="account-heading">Email:</p></b>
+        <!--SAJ: Update to feed live data to <p> class needs: a) to be empty string can't be null b) have id-->
+        <p class="account-info" id="useremail">" "</p>
+    </div>
+    <div class="account-details">
+        <b><p class="account-heading">Password:</p>
+        </b>
+        <p class="account-info">********</p>
+    </div>
     
-    </script>
-</html>
+
+    <!-- SAJ 4/23/2021 Feature update: This <form class= "updatepassword" is to Change Password: This code displays these elements and immediately the script code below hides some of these elements-->
+    <!-- the elements that will be hidden are input elements that will only show up when the user presse Change Password -->
+    <form class="account-details" name='updatepsw' >       
+        <label for="psw" hidden id="tpsw" ><b>Password:</b><br></label>
+        <input type="password" hidden id="vpsw" placeholder="Enter Password" name="psw" minlength="8" required><br><br>
+	    <label for="repsw"  hidden id="trepsw"><b>Re-enter Password:</b><br></label>
+        <input type="password" hidden id="vrepsw" placeholder="Re-enter Password" name="repsw" minlength="8" required>
+        <a id='Error'>Something is wrong</a>
+    </form>
+
+   <!-- SAJ 4/23/2021 Feature update: Added "Change Password" and "Save New Password" buttons to work with the Change Password Form in this page -->
+    <div class="account-buttons">
+        <!---SAJ- Added a savepassword button, added id so I could turn them off and on -->
+        <button class="home-btn" type ="button" onclick="savepassword()" id="btn_save_change">Save New Password</button>        
+        <button class="home-btn" type ="button" onclick="changepassword()" id="btn_change_psw">Change Password</button>
+        <button class="home-btn" id='month' onclick='viewCh(this)' id="btn_goback">Back to calendar</button>
+    </div> <!-- /account-buttons -->
+{% block script %}
+<!-- Most of this can be deleted if I do not get the Change Password to work.  I placed the javascript in here because I couldn't get it to work otherwise.  -->
+<script src="{{url_for('static', filename = 'monthly.js')}}"></script>
+<script src="{{url_for('static', filename = 'script.js')}}"></script>
+<script>
+
+    var valid_password
+
+    //Feed the information displayed on the page with the user information for the current user
+    user={{user|tojson}} ;
+
+    document.getElementsByClassName("account-details").innerHTML=user;
+    document.getElementById("username").innerHTML=user.username
+    document.getElementById("firstname").innerHTML=user.fname
+    document.getElementById("lastname").innerHTML=user.lname
+    document.getElementById("useremail").innerHTML=user.email
+    $('#Error').hide()
+
+    hideChangePwdForm()
+
+
+    function hideChangePwdForm(){
+        //Hide the form to change the password 
+        $("#tpsw").hide("slow").css({"font-family": "Arial, Helvetica, sans-serif", "font-size": "20px"})
+        $("#vpsw").hide("slow").css({"font-family": "Arial, Helvetica, sans-serif", "font-size": "20px"})
+        $("#trepsw").hide("slow").css({"font-family": "Arial, Helvetica, sans-serif", "font-size": "20px", "Padding": "15px"})
+        $("#vrepsw").hide("slow").css({"font-family": "Arial, Helvetica, sans-serif", "font-size": "20px", "Padding": "15px"})
+        //$("#lblank").hide("slow").css({"font-family": "Arial, Helvetica, sans-serif", "font-size": "20px", "Padding": "15px"}).append("<br><br><br>") 
+        //Also hide all the buttons associated with selecting changing password
+        $("#btn_save_change").hide()
+    }
+
+
+    function changepassword(){ 
+
+        prepareChangePwdForm()
+        showChangePwdForm()
+        //check if password was typed and retyped correctly
+       
+    }
+
+    function prepareChangePwdForm(){
+        //Hide these items because user is changing the password
+        ///toggleOffOn(document.getElementById("userpassword"))
+        ///toggleOffOn(document.getElementById("titlepassword")
+        $("#userpassword").hide()
+        $("#titlepassword").hide()
+        //Hide these buttons because user is changing the password
+        $("#btn_goback").hide()
+        $("#btn_change_psw").hide()  
+    }
+
+    function showChangePwdForm(){
+        //Show change of password labels and input
+       
+        $("#tpsw").show()
+        $("#vpsw").show()
+        $("#trepsw").show()
+        $("#vrepsw").show()
+        //Show the save change button
+        $("#btn_save_change").show()
+    }
+
+    function toggleOffOn(elementIdName){
+        if (elementIdName.style.display == "none"){
+            elementIdName.style.display = "block";
+        }else {
+            elementIdName.style.display = "none";
+        }
+    }
+
+    function invalid(){
+        a=($('#vpsw').val()==$('#vrepsw').val()) & ($('#vpsw').val().length>7)
+        if (a) {$('#Error').hide();return false}
+        $('#Error').show()
+        return true
+    }
+
+    function savepassword(){
+        if (invalid()){return}
+        else{
+        
+        user.password=$('[name=psw]').val()
+
+        setUser()
+
+        hideChangePwdForm()
+        }
+    }
+    
+
+</script>
+{% endblock script %}
+    
+</body>
+{% endblock body %}

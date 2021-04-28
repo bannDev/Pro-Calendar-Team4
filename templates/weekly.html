@@ -1,24 +1,10 @@
-{% extends 'layout.html' %}
-
-{% block head %} {% endblock %}
-
+{% extends 'menu_layout.html' %}
 
 {% block content %}
-   
-<div class="col-9 main">
-    <!-- calendar header -->
-    <div class="row calendar-header">
-        <div class="col-5 month">
-            <h1>Jan 2021</h1>
-        </div>
-        <div class="col-3 nav">
-            <button type="button"  onclick ='back()'>Back</button>
-            <button type="button"  onclick ="forward()">Forward</button>
-        </div>
-        
-    </div>
+    <!-- supposed to be weekly layout -->
     <!-- monthly layout, 7 columns, 7 rows -->
     <div class="row calendar grid-container-1 ">
+        
         <!-- row1 -->
         <div class="day grid-col-1"></div>
         <div class="day grid-col-2"></div>
@@ -29,7 +15,7 @@
         <div class="day grid-col-7"></div>
         <div class="day grid-col-8 last-col"></div>
         <!-- /row1 -->
-            
+       
         <div class="grid-col-1"></div>
             <div class="grid-col-2"></div>
             <div class="grid-col-3"></div>
@@ -51,8 +37,8 @@
             <div class="grid-col-8 btm-row last-col"></div>
         <!-- /row7 -->
     </div>
-</div><!-- main -->
-{% endblock %}
-{% block footer %}
+{% endblock content %}
+
+{% block script %}
 <script src="{{url_for('static', filename = 'weekly.js')}}"></script>
-{% endblock %}
+{% endblock script %}

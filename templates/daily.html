@@ -1,0 +1,30 @@
+{% extends 'menu_layout.html' %}
+
+{% block content %}
+<!-- this h1 is in place of the div in menu_layout.html for displaying month name and year, it has class="col-5 month"; this can be deleted if js will be used to dynamically generate date and month like it is in monthly and weekly views -->
+<!-- moved date h1 to menu_layout.html -->
+
+<!-- daily layout, 3 columns, 13 rows -->
+<div class="row calendar grid-container-2">
+    <!-- row1 -->
+    <div class="day grid-col-1"></div>
+    <div class="day grid-col-2"></div>
+    <div class="day grid-col-3 last-col"></div>
+    <!-- /row1 -->
+    <div class="grid-col-1"></div>
+    <div class="grid-col-2"></div>
+    <div class="grid-col-3 last-col"></div>
+    <!-- /row1 -->
+
+    <!--/last row-->
+    <div class="grid-col-1 btm-row"></div>
+    <div class="grid-col-2 btm-row"></div>
+    <div class="grid-col-3 btm-row last-col"></div>
+    <!-- /last row -->          
+</div> <!-- /daily layout div -->
+{% endblock content %}
+
+{% block script %}
+<!-- link daily.js -->
+<script src="{{url_for('static', filename = 'daily.js')}}"></script>
+{% endblock script %}

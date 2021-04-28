@@ -1,0 +1,50 @@
+DROP TABLE event;
+
+CREATE TABLE event (
+    eventname CHAR    NOT NULL ON CONFLICT ROLLBACK,
+    address   STRING  NOT NULL,
+    username  CHAR    NOT NULL ON CONFLICT ROLLBACK
+                      REFERENCES users (username) ON DELETE CASCADE
+                                                  ON UPDATE CASCADE
+                                                  MATCH SIMPLE,
+    date      DATE    NOT NULL ON CONFLICT ROLLBACK,
+    start     TIME    NOT NULL ON CONFLICT ROLLBACK,
+    endt      TIME    NOT NULL,
+    groupID   INTEGER REFERENCES groups (groupID) ON DELETE CASCADE
+                                                  ON UPDATE CASCADE
+						  MATCH SIMPLE
+                      NOT NULL,
+    reminder  INTEGER NOT NULL
+                      DEFAULT (0),
+    eventID   INTEGER PRIMARY KEY AUTOINCREMENT
+                      NOT NULL
+);
+DROP TABLE groups;
+
+CREATE TABLE groups (
+    name     CHAR    NOT NULL,
+    username CHAR    REFERENCES users (username) ON DELETE CASCADE
+                                                 ON UPDATE CASCADE
+                                                 MATCH SIMPLE
+                     NOT NULL,
+    color    BLOB    NOT NULL,
+    showG    INTEGER DEFAULT (1) 
+                     NOT NULL,
+    groupID  INTEGER PRIMARY KEY AUTOINCREMENT
+                     NOT NULL
+);
+
+CREATE TABLE users (
+    username CHAR    PRIMARY KEY ON CONFLICT ROLLBACK
+                     UNIQUE ON CONFLICT ROLLBACK
+                     NOT NULL ON CONFLICT ROLLBACK,
+    password CHAR    NOT NULL ON CONFLICT ROLLBACK
+                     DEFAULT password,
+    email    CHAR    NOT NULL ON CONFLICT ROLLBACK,
+    lname    CHAR    NOT NULL ON CONFLICT ROLLBACK,
+    fname    CHAR    NOT NULL,
+    ViewSet  VARCHAR
+);
+
+
+
